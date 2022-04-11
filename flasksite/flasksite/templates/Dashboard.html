@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" type="text/css" href="../css/bootstrap.rtl.css">
+  <link rel="stylesheet" type="text/css" href="../css/style.css">
+  <title>Document</title>
+  <style>
+    
+    
+    
+  </style>
+</head>
+
+<body>
+  <!-- <div class="all-content-wrapper d-flex" style="align-items:stretch"> -->
+    <!-- тут будет кнопка абсолют-->
+
+    <div id="mySidenav" class="sidenav d-flex flex-column flex-shrink-0 text-white "
+      style=" height: 100vh; align-items:stretch">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <span class="fs-4 text-center" style="padding-left:40px">Sidebar</span>
+
+      <hr>
+      <ul class="mc nav nav-pills flex-column mb-auto text-center align-items-stretch justify-content-around flex-column h-100" style="padding-left: 0%">
+        <li class="nav-item ">
+          <a href="#" class="nav-link text-white" aria-current="page">
+            <svg class="bi me-2" width="16" height="16">
+              <use xlink:href="#home"></use>
+            </svg>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white mc">
+            <svg class="bi me-2" width="16" height="16">
+              <use xlink:href="#speedometer2"></use>
+            </svg>
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white m">
+            <svg class="bi me-2" width="16" height="16">
+              <use xlink:href="#table"></use>
+            </svg>
+            Orders
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white">
+            <svg class="bi me-2" width="16" height="16">
+              <use xlink:href="#grid"></use>
+            </svg>
+            Products
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white">
+            <svg class="bi me-2" width="16" height="16">
+              <use xlink:href="#people-circle"></use>
+            </svg>
+            Customers
+          </a>
+        </li>
+      </ul>
+      <hr>
+
+    </div>
+
+    <div id="content" class="" style="background-color:#050b34">
+      <p style="font-size:40px;cursor:pointer" class="position-fixed" onclick="openNav()"> ☰ </p>
+      <div class="container-fluid ">
+
+        <div class="row align-items-stretch mb-3">
+          <div class="col-xxl-10 d-flex justify-content-end align-items-stretch" style="height: 100%;">
+
+            <div class="card card_style mb-3">
+              <div class="card-header">Camera src </div>
+              <div class="card-body m-2">
+                <div class="w-auto"><video src="" class="" autoplay loop
+                    style="width: 1280px; height: 720px;background-color: black;"></video></div>
+                <h5 class="card-title">Название</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Подзаголовок </h6>
+                <p class="card-text">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cupiditate delectus
+                  nostrum in facilis. Omnis tempora officiis accusamus? A, provident facilis.</p>
+                  <br> <br> <br> <br> <br> <br> <br><br><br><br>
+                  <p class="card-text"> A, provident facilis.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-2 d-flex flex-column bd-highlight justify-content-evenly ">
+
+            <div class="card card_style bd-highlight mb-3 ">
+              <div class="card-body m-2" >
+                <h5 class="card-title">Все сотрудники</h5>
+                <!-- <h6 class="card-subtitle mb-2 text-muted sssss" >Сюда</h6> -->
+                <div class="card-text" id="divWorkVisitorsAll" ></div>               
+              </div>
+            </div>
+
+            <div class="card card_style bd-highlight mb-3 ">
+              <div class="card-body m-2" >
+                <h5 class="card-title">Сотрудники, использующие СИЗ</h5>
+                <!-- <h6 class="card-subtitle mb-2 text-muted sssss" id="123">Подзаголовок </h6> -->
+                <div class="card-text" id="divWorkVisitorsGood" ></div>
+                 
+              </div>
+            </div>
+
+            <div class="card card_style bd-highlight mb-3 ">
+              <div class="card-body m-2">
+                <h5 class="card-title">Нарушители</h5>
+                <!-- <h6 class="card-subtitle mb-2 text-muted sssss" id="123">Подзаголовок </h6> -->
+                <div class="card-text" id="divWorkVisitorsBad" ></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- </div> -->
+
+
+  <script>
+    
+    function openNav() {
+      document.getElementById("mySidenav").className += " widthSide";
+    }
+
+    function closeNav() {
+      console.log("KRYA")
+      document.getElementById("mySidenav").className = document.getElementById("mySidenav").className.replace(/(?:^|\s)widthSide(?!\S)/g, '');
+      console.log(document.getElementById("mySidenav").className)
+    }
+  </script>
+  <script src="../index.js"></script>
+  <script src="../js/bootstrap.bundle.min.js"></script>
+  <!--<script>
+    const ul = document.getElementById('authors');
+const url='https://randomuser.me/api/?results=10';
+function create(element){
+  return document.createElement(element);
+}
+function append(parent, el) {
+  return parent.appendChild(el);//к parent добавляем el
+}
+
+
+   
+  fetch(url)
+.then((resp) => resp.json())
+.then(function(data) {
+  let authors = data.results;
+
+  let authors = data.results;
+  
+  return authors.map(function(authors) {
+    let li = createNode('li');
+    let img = createNode('img');
+    let span = createNode('span');
+    img.src = authors.picture.medium;
+    span.innerHTML = `${authors.name.first} ${authors.name.last}`;
+    append(li, img);
+    append(li, span);
+    append(ul, li);
+  }) 
+  .catch(function(error) {
+    console.log(error);
+  });
+  </script>>--->
+  <script>
+    async function getResponse() {
+      let responce = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+      console.log(responce)
+    }
+
+  </script>
+</body>
+
+</html>
