@@ -126,9 +126,9 @@ def login():
     #cursor.execute("""INSERT INTO USERS (name, email,psw, time) VALUES ('admin','admin', '21232f297a57a5a743894a0e4a801fc3', 60);""")
     print("test log")
 
-    formEmail = request.form['email']
+    formEmail = request.form['username']
     formPassword = request.form['psw']
-    user = dbase.getUserByEmail(formEmail)
+    user = dbase.getUserByUsername(formEmail)
     print("test  before user", user, user and check_password_hash(user['psw'], formPassword))
     if user and check_password_hash(user['psw'], formPassword):
         print("test  before user if __ ", user)
@@ -152,13 +152,13 @@ def login():
 @app.route("/register", methods=["POST", "GET"])
 def register():
     # form = RegisterForm()
-    formEmail = request.form['email']
+    formEmail = request.form['username']
     formPassword = request.form['psw']
     #if form.validate_on_submit():test log
     print("test log register", formEmail, formPassword)
     hash = generate_password_hash(formPassword)
     print("test log register hash ", hash)
-    res = dbase.addUser('testName', formEmail, hash)
+    res = dbase.addUser(formEmail, hash)
     print("test log res", res)
     if res:
         flash("Вы успешно зарегистрированы", "success")

@@ -11,12 +11,17 @@ text text NOT NULL,
 url text NOT NULL,
 time integer NOT NULL
 );
-
 CREATE TABLE IF NOT EXISTS users (
-id integer PRIMARY KEY AUTOINCREMENT,
-name text NOT NULL,
-email text NOT NULL,
-psw text NOT NULL,
-avatar BLOB DEFAULT NULL,
-time integer NOT NULL
+id integer UNSIGNED PRIMARY KEY AUTOINCREMENT,
+username VARCHAR(32) UNIQUE,
+psw VARCHAR(32) NOT NULL,
+created DATE
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+session_id	INTEGER UNSIGNED PRIMARY KEY AUTOINCREMENT    NOT NULL,
+id_user        INTEGER NOT NULL,
+access_token   VARCHAR(32),
+date_created   DATE,
+FOREIGN KEY(id_user) REFERENCES USERS(id_user)
 );

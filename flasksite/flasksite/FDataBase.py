@@ -2,7 +2,12 @@ import sqlite3
 import time
 import math
 import re
+from datetime import date
+
 from flask import url_for
+
+
+
 
 class FDataBase:
     def __init__(self, db):
@@ -64,16 +69,15 @@ class FDataBase:
 
         return []
 
-    def addUser(self, name, email, hpsw):
+    def addUser(self, username, hpsw):
         try:
-            self.__cur.execute(f"SELECT COUNT() as `count` FROM users WHERE email LIKE '{email}'")
+            self.__cur.execute(f"SELECT COUNT() as `count` FROM users WHERE username LIKE '{username}'")
             res = self.__cur.fetchone()
             if res['count'] > 0:
-                print("Пользователь с таким email уже существует")
+                print("Пользователь с таким username уже существует")
                 return False
 
-            tm = math.floor(time.time())
-            self.__cur.execute("INSERT INTO users VALUES(NULL, ?, ?, ?, NULL, ?)", (name, email, hpsw, tm))
+            self.__cur.execute("INSERT INTO users VALUES(NULL, ?, ?, datetime('now'))", (username,  hpsw))
             self.__db.commit()
         except sqlite3.Error as e:
             print("Ошибка добавления пользователя в БД "+str(e))
@@ -95,9 +99,9 @@ class FDataBase:
 
         return False
 
-    def getUserByEmail(self, email):
+    def getUserByUsername(self, username):
         try:
-            self.__cur.execute(f"SELECT * FROM users WHERE email = '{email}' LIMIT 1")
+            self.__cur.execute(f"SELECT * FROM users WHERE username = '{username}' LIMIT 1")
             res = self.__cur.fetchone()
             if not res:
                 print("Пользователь не найден")
