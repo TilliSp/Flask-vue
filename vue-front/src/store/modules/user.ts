@@ -17,7 +17,7 @@ class UserState {
     name: '',
     surname: '',
     type: '',
-    email: '',
+    username: '',
     customer: ''
   }
   isAdmin = false
@@ -44,7 +44,7 @@ class UserMutations extends Mutations<UserState> {
   }
   setUserInfo(userInfo: any) {
     this.state.userInfo.name = userInfo.name
-    this.state.userInfo.email = userInfo.email
+    this.state.userInfo.username = userInfo.username
     this.state.userInfo.customer = userInfo.customer
     this.state.userInfo.type = userInfo.type
     this.state.userInfo.surname = userInfo.surname
@@ -64,7 +64,7 @@ class UserActions extends Actions<
       console.log('test response: ',response.data)
       if (response.data.ok) {
         await this.actions.fetchLoginUser({
-          email: registerObj.email,
+          username: registerObj.username,
           password: registerObj.password
         })
       }

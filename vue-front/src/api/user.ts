@@ -2,7 +2,7 @@ import { http } from '@/api/httpAxios'
 /*import createURLParams from '@/api/datasource/createURLParams.ts'*/
 
 export interface UserRegister {
-  email: string
+  username: string
   name: string
   surname?: string
   password: string
@@ -11,21 +11,21 @@ export interface UserRegister {
 }
 
 export interface UserLogin {
-  email: string
+  username: string
   password: string
 }
 
 export default class UserAPI {
   public static register(userInfo: UserRegister) {
     const data = new FormData()
-    data.append('email', userInfo.email)
+    data.append('username', userInfo.username)
     data.append('psw', userInfo.password)
 
     return http.post(`/register`, data)
   }
   public static login(userInfo: UserLogin) {
     const data = new FormData()
-    data.append('email', userInfo.email)
+    data.append('username', userInfo.username)
     data.append('psw', userInfo.password)
     return http.post(`/login`, data)
     //return http.post(`/login`, { ...userInfo })

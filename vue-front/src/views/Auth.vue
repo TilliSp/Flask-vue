@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="authCard">
-      <div style="color:white;
+      <div style="
       text-align: center;
       font-size:5rem"
       >
@@ -108,11 +108,11 @@ export default class Auth extends Mapper {
   }
   private async loginClick() {
     const objReq: any = {
-      email: this.authData.login,
+      username: this.authData.login,
       password: this.authData.password
     }
     // await UserAPI.login(objReq)
-    // this.userInfo.email = this.authData.login
+    // this.userInfo.username = this.authData.login
     await this.fetchLoginUser(objReq)
     this.$router.push('/books')
   }

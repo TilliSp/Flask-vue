@@ -1,6 +1,6 @@
 <template>
   <div class="authCard">
-    <b-modal
+    <b-modal hide-footer="true"
         id="registrationModal"
         title="Регистрация"
         size="lg"
@@ -118,13 +118,13 @@ export default class Registration extends Mapper {
   }
   private async registrationClick() {
     const objReq: any = {
-      email: this.authData.login,
+      username: this.authData.login,
       password: this.authData.password
     }
     await this.fetchRegisterUser(objReq)
     console.log('test registrationClick: ')
     // await UserAPI.login(objReq)
-    // this.userInfo.email = this.authData.login
+    // this.userInfo.username = this.authData.login
     //await this.fetchLoginUser(objReq)
     //this.$router.push('/books')
   }
