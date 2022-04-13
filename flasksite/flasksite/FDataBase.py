@@ -71,11 +71,12 @@ class FDataBase:
 
     def addUser(self, username, hpsw):
         try:
-            self.__cur.execute(f"SELECT COUNT() as `count` FROM users WHERE username LIKE '{username}'")
+            self.__cur.execute(f"SELECT * FROM users WHERE username = '{username}' LIMIT 1")
             res = self.__cur.fetchone()
-            if res['count'] > 0:
+            if res:
                 print("Пользователь с таким username уже существует")
                 return False
+
 
             self.__cur.execute("INSERT INTO users VALUES(NULL, ?, ?, datetime('now'))", (username,  hpsw))
             self.__db.commit()
