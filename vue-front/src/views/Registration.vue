@@ -126,7 +126,9 @@ export default class Registration extends Mapper {
     // await UserAPI.login(objReq)
     // this.userInfo.username = this.authData.login
     //await this.fetchLoginUser(objReq)
-    //this.$router.push('/books')
+    this.$router.push('/books')
+    //this.$bvModal.close('registrationModal')
+
   }
 }
 </script>
