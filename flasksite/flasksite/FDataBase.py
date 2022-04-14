@@ -7,13 +7,10 @@ from datetime import date
 from flask import url_for
 
 
-
-
 class FDataBase:
     def __init__(self, db):
         self.__db = db
         self.__cur = db.cursor()
-
 
     def getMenu(self):
         sql = '''SELECT * FROM mainmenu'''
@@ -24,6 +21,12 @@ class FDataBase:
         except:
             print("Ошибка чтения из БД")
         return []
+
+
+    def check(self, var):
+        res = self.re.sub(r'[^0-9a-zA-Z]', r'', var)
+        return res
+
 
     def addPost(self, title, text, url):
         try:
@@ -43,7 +46,7 @@ class FDataBase:
             self.__cur.execute("INSERT INTO posts VALUES(NULL, ?, ?, ?, ?)", (title, text, url, tm))
             self.__db.commit()
         except sqlite3.Error as e:
-            print("Ошибка добавления статьи в БД "+str(e))
+            print("Ошибка добавления статьи в БД " + str(e))
             return False
 
         return True
@@ -55,7 +58,7 @@ class FDataBase:
             if res:
                 return res
         except sqlite3.Error as e:
-            print("Ошибка получения статьи из БД "+str(e))
+            print("Ошибка получения статьи из БД " + str(e))
 
         return (False, False)
 
@@ -65,7 +68,7 @@ class FDataBase:
             res = self.__cur.fetchall()
             if res: return res
         except sqlite3.Error as e:
-            print("Ошибка получения статьи из БД "+str(e))
+            print("Ошибка получения статьи из БД " + str(e))
 
         return []
 
@@ -77,11 +80,10 @@ class FDataBase:
                 print("Пользователь с таким username уже существует")
                 return False
 
-
-            self.__cur.execute("INSERT INTO users VALUES(NULL, ?, ?, datetime('now'))", (username,  hpsw))
+            self.__cur.execute("INSERT INTO users VALUES(NULL, ?, ?, datetime('now'))", (username, hpsw))
             self.__db.commit()
         except sqlite3.Error as e:
-            print("Ошибка добавления пользователя в БД "+str(e))
+            print("Ошибка добавления пользователя в БД " + str(e))
             return False
 
         return True
@@ -96,7 +98,7 @@ class FDataBase:
 
             return res
         except sqlite3.Error as e:
-            print("Ошибка получения данных из БД "+str(e))
+            print("Ошибка получения данных из БД " + str(e))
 
         return False
 
@@ -110,7 +112,7 @@ class FDataBase:
 
             return res
         except sqlite3.Error as e:
-            print("Ошибка получения данных из БД "+str(e))
+            print("Ошибка получения данных из БД " + str(e))
 
         return False
 
@@ -123,7 +125,8 @@ class FDataBase:
             self.__cur.execute(f"UPDATE users SET avatar = ? WHERE id = ?", (binary, user_id))
             self.__db.commit()
         except sqlite3.Error as e:
-            print("Ошибка обновления аватара в БД: "+str(e))
+            print("Ошибка обновления аватара в БД: " + str(e))
             return False
         return True
+
 
