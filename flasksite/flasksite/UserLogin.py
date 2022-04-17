@@ -10,7 +10,7 @@ class userLogin(UserMixin):
         self.__user = user
         return self
 
-    def getId(self):
+    def get_id(self):
         return str(self.__user['id'])
 
     def getName(self):

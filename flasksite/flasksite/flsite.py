@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
 import datetime
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from UserLogin import UserLogin
+from UserLogin import userLogin
 from forms import LoginForm, RegisterForm
 from admin.admin import admin
 
@@ -36,7 +36,7 @@ CORS(app)
 @login_manager.user_loader
 def load_user(user_id):
     print("load_user")
-    return UserLogin().fromDB(user_id, dbase)
+    return userLogin().fromDB(user_id, dbase)
 
 def connect_db():
     conn = sqlite3.connect(app.config['DATABASE'])
@@ -132,7 +132,7 @@ def login():
     print("test  before user", user, user and check_password_hash(user['psw'], formPassword))
     if user and check_password_hash(user['psw'], formPassword):
         print("test  before user if __ ", user)
-        userlogin = UserLogin().create(user)
+        userlogin = userLogin().create(user)
         login_user(userlogin, remember=False)
         print("test  here user", user)
         # return user #redirect(request.args.get("next") or url_for("profile"))
