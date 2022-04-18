@@ -1,0 +1,73 @@
+<template>
+  <div
+    id="mySidenav"
+    class="sidenav d-flex flex-column flex-shrink-0 text-white widthSide"
+    style="height: 100vh; align-items: stretch"
+  >
+   
+    <span class="fs-4 text-center" style="padding-left: 40px">Sidebar</span>
+
+    <hr />
+    <ul
+      class="
+        mc
+        nav nav-pills
+        flex-column
+        mb-auto
+        text-center
+        align-items-stretch
+        justify-content-around
+        flex-column
+        h-100
+      "
+      style="padding-left: 0%"
+    >
+      <li class="nav-item">
+        <a href="#" class="nav-link text-white" aria-current="page">
+          <svg class="bi me-2" width="16" height="16">
+            <use xlink:href="#home"></use>
+          </svg>
+          Home
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white mc">
+          <svg class="bi me-2" width="16" height="16">
+            <use xlink:href="#speedometer2"></use>
+          </svg>
+          Dashboard
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white m">
+          <svg class="bi me-2" width="16" height="16">
+            <use xlink:href="#table"></use>
+          </svg>
+          Orders
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi me-2" width="16" height="16">
+            <use xlink:href="#grid"></use>
+          </svg>
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi me-2" width="16" height="16">
+            <use xlink:href="#people-circle"></use>
+          </svg>
+          Customers
+        </a>
+      </li>
+    </ul>
+    <hr />
+  </div>
+</template>
+<style lang="scss" scoped>
+.widthSide {
+  width: 15%;
+}
+</style>
