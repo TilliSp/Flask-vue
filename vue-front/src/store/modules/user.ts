@@ -9,8 +9,15 @@ import UserAPI, { UserRegister, UserLogin } from '@/api/user.ts'
 import { http } from '@/api/httpAxios'
 import _ from 'lodash'
 
+interface UserLoginInfoI {
+  id: string;
+  access_token: string;
+  role: string;
+}
+
 class UserState {
   userId = '' //'5fc35fb1f95de0304367d53d'
+  role = ''
   token: any = null
   isAuthenticated = false
   userInfo = {
@@ -35,8 +42,11 @@ class UserMutations extends Mutations<UserState> {
     localStorage.removeItem('user-token')
     this.state.isAuthenticated = false
   }
-  setNewUserId(id: string) {
-    this.state.userId = id
+  setNewUserInfo(userInfo: UserLoginInfoI) {
+    this.state.userId = userInfo.id
+    this.state.role = userInfo.role ?? 0
+    this.state.token = userInfo.access_token
+    localStorage.setItem('user-token', userInfo.access_token)
   }
   setToken(token: any) {
     this.state.token = token
@@ -78,8 +88,7 @@ class UserActions extends Actions<
       this.state.isBadAuth = false
       const response = await UserAPI.login(loginObj)
       if (!_.isEmpty(response.data.access_token) && !_.isEmpty(response.data.id)) {
-        this.mutations.setToken(response.data.access_token)
-        this.mutations.setNewUserId(response.data.id)
+        this.mutations.setNewUserInfo(response.data)
         console.log('test response.data: ', response.data, response.data.access_token)
         const token = localStorage.getItem('user-token')
         if (token) {

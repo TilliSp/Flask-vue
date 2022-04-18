@@ -58,10 +58,10 @@ const routes: Array<RouteConfig> = [
         beforeEnter: ifAuthenticated
       },
       {
-        path: '/dash',
-        name: 'Dashboard',
+        path: '/test',
+        name: 'Test',
         component: () =>
-            import(/* webpackChunkName: "books" */ '@/views/Dashboard.vue'),
+            import(/* webpackChunkName: "books" */ '@/views/Test.vue'),
         beforeEnter: ifAuthenticated
       },
     ]
