@@ -102,6 +102,7 @@ class FDataBase:
 
         return False
 
+
     def getUserByUsername(self, username):
         try:
             self.__cur.execute(f"SELECT * FROM users WHERE username = '{username}' LIMIT 1")

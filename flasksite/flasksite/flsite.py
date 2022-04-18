@@ -1,6 +1,8 @@
 import sqlite3
 import os
 from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, make_response
+from sqlalchemy.dialects.sqlite import json
+
 from FDataBase import FDataBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager
@@ -145,8 +147,9 @@ def login():
         access_token = create_access_token(identity=str(user['id']), expires_delta=expires)
 
         print("test  access_token: ", access_token)
+        print(type(user))
 
-        return {"access_token": access_token, "id":  str(user['id'])}, 200 #render_template("login.html", menu=dbase.getMenu(), title="Авторизация", form=form)
+        return {"access_token": access_token, "id":  str(user['id']), "role": (user['role'])}, 200 #render_template("login.html", menu=dbase.getMenu(), title="Авторизация", form=form)
     return {"error": 'Email or password invalid'}, 401
 
 @app.route("/register", methods=["POST", "GET"])
