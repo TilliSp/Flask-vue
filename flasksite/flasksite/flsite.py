@@ -149,7 +149,7 @@ def login():
         print("test  access_token: ", access_token)
         print(type(user))
 
-        return {"access_token": access_token, "id":  str(user['id']), "role": (user['role'])}, 200 #render_template("login.html", menu=dbase.getMenu(), title="Авторизация", form=form)
+        return {"access_token": access_token, "id":  str(user['id']), "role": (user['role']), "username": (user['username'])}, 200 #render_template("login.html", menu=dbase.getMenu(), title="Авторизация", form=form)
     return {"error": 'Email or password invalid'}, 401
 
 @app.route("/register", methods=["POST", "GET"])
