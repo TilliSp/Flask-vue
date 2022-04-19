@@ -131,6 +131,7 @@
 <script>
 import axios from 'axios';
 import store from "../store";
+import { method } from 'lodash';
 
 
 export default {
@@ -267,4 +268,5 @@ export default {
     this.getBooks();
   },
 };
+
 </script>

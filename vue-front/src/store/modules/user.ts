@@ -10,14 +10,16 @@ import { http } from '@/api/httpAxios'
 import _ from 'lodash'
 
 interface UserLoginInfoI {
-  id: string;
-  access_token: string;
-  role: string;
+  username: string
+  id: string
+  access_token: string
+  role: string
 }
 
 class UserState {
   userId = '' //'5fc35fb1f95de0304367d53d'
   role = ''
+  username = ''
   token: any = null
   isAuthenticated = false
   userInfo = {
@@ -42,11 +44,17 @@ class UserMutations extends Mutations<UserState> {
     localStorage.removeItem('user-token')
     this.state.isAuthenticated = false
   }
+  
   setNewUserInfo(userInfo: UserLoginInfoI) {
     this.state.userId = userInfo.id
+    this.state.username = userInfo.username
     this.state.role = userInfo.role ?? 0
     this.state.token = userInfo.access_token
     localStorage.setItem('user-token', userInfo.access_token)
+    localStorage.setItem('user-username', userInfo.username)
+  }
+  getUserInfo(){
+    console.log(localStorage.getItem('user-username'))
   }
   setToken(token: any) {
     this.state.token = token
