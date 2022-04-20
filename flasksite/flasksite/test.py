@@ -1,3 +1,4 @@
+import json
 import sqlite3
 import re
 
@@ -15,6 +16,8 @@ cursor.execute("SELECT * FROM users")
 #	);''')
 #cursor.execute("SELECT date('now');")
 res = cursor.fetchall()
+
+print(type(res))
 print(res)
 
 conn.commit()
