@@ -42,9 +42,9 @@ class UserMutations extends Mutations<UserState> {
   logOut() {
     console.log('test logout')
     localStorage.removeItem('user-token')
+    localStorage.removeItem('user-username')
     this.state.isAuthenticated = false
   }
-  
   setNewUserInfo(userInfo: UserLoginInfoI) {
     this.state.userId = userInfo.id
     this.state.username = userInfo.username
@@ -53,7 +53,7 @@ class UserMutations extends Mutations<UserState> {
     localStorage.setItem('user-token', userInfo.access_token)
     localStorage.setItem('user-username', userInfo.username)
   }
-  getUserInfo(){
+  getUserInfo() {
     console.log(localStorage.getItem('user-username'))
   }
   setToken(token: any) {
@@ -79,7 +79,7 @@ class UserActions extends Actions<
     try {
       const response = await UserAPI.register(registerObj)
       //this.mutations.setNewUserId(response.data.id)
-      console.log('test response: ',response.data)
+      console.log('test response: ', response.data)
       if (response.data.ok) {
         await this.actions.fetchLoginUser({
           username: registerObj.username,

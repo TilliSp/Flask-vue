@@ -3,20 +3,22 @@
     <b-sidebar id="main-sidebar" title="СайдБар" backdrop>
       <div>Пользователь: {{ username }}</div>
       <button
-        style="float:right; margin-right: 3px;"
+        style="float: right; margin-right: 3px"
         type="button"
         class="btn btn-success btn-sm"
         @click="logoutPage"
       >
         Logout
       </button>
-      <br>
+      <br />
       <hr />
       <b-nav vertical class="py-1 px-1">
         <b-nav-item to="/books">Books</b-nav-item>
         <b-nav-item to="/profile">Profile</b-nav-item>
         <b-nav-item to="/Admin" v-if="role === 4">Admin(админ)</b-nav-item>
-        <b-nav-item to="/lorem" v-if="role !== 0">Модерация актов(админ, оператор)</b-nav-item>
+        <b-nav-item to="/lorem" v-if="role !== 0"
+          >Модерация актов(админ, оператор)</b-nav-item
+        >
       </b-nav>
     </b-sidebar>
   </div>
@@ -26,28 +28,38 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { RouteConfigSingleView } from 'vue-router/types/router'
 import { userMapper } from '@/store/modules/user'
-import { method } from 'lodash'
 import store from '@/store'
+import _ from 'lodash'
 
 const Mappers = Vue.extend({
   computed: {
     ...userMapper.mapState(['role']),
     ...userMapper.mapState(['username'])
+  },
+  methods: {
+    ...userMapper.mapMutations(['logOut'])
   }
 })
-new Vue({
-  methods: {
-    logoutPage() {
-      localStorage.removeItem('user-token')
-      store.state.isAuthenticated = false
-      this.$router.push('/auth')
+
+@Component({ components: {} })
+export default class Sidebar extends Mappers {
+  logoutPage() {
+    this.logOut()
+    this.$router.push('/auth')
+  }
+  mounted() {
+    const usernames = localStorage.getItem('user-username')
+    if (usernames) {
+      this.username = usernames
     }
   }
-})
-@Component({ components: { } })
-export default class Sidebar extends Mappers {  
+  getUserInfo() {
+    const usernames = localStorage.getItem('user-username')
+    if (!_.isEmpty(usernames)) {
+      return usernames
+    }
+  }
   private treeSidebar: { [k: string]: RouteConfigSingleView[] } = {}
-  
 }
 </script>
 
