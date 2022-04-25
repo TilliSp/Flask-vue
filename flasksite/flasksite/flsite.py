@@ -23,7 +23,7 @@ MAX_CONTENT_LENGTH = 1024 * 1024
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config.update(dict(DATABASE=os.path.join(app.root_path,'flsite.db')))
+app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
 jwt = JWTManager(app)
 
 app.register_blueprint(admin, url_prefix='/admin')
@@ -40,10 +40,12 @@ def load_user(user_id):
     print("load_user")
     return userLogin().fromDB(user_id, dbase)
 
+
 def connect_db():
     conn = sqlite3.connect(app.config['DATABASE'])
     conn.row_factory = sqlite3.Row
     return conn
+
 
 def create_db():
     """Вспомогательная функция для создания таблиц БД"""
@@ -53,6 +55,7 @@ def create_db():
     db.commit()
     db.close()
 
+
 def get_db():
     '''Соединение с БД, если оно еще не установлено'''
     if not hasattr(g, 'link_db'):
@@ -61,6 +64,8 @@ def get_db():
 
 
 dbase = None
+
+
 @app.before_request
 def before_request():
     """Установление соединения с БД перед выполнением запроса"""
@@ -68,13 +73,14 @@ def before_request():
     db = get_db()
     dbase = FDataBase(db)
 
+
 @app.after_request
 def after_request(response):
     print('after_request')
     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')
-    response.headers.add('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Origin, X-Requested-With, Content-Type, Accept, Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS, HEAD')
-
 
     response.headers.add('Access-Control-Allow-Credentials', 'true')
 
@@ -97,19 +103,20 @@ def index():
     print('test check_flask')
     return render_template('index.html', menu=dbase.getMenu(), posts=dbase.getPostsAnonce())
 
+
 @app.route("/add_post", methods=["POST", "GET"])
 def addPost():
     if request.method == "POST":
         if len(request.form['name']) > 4 and len(request.form['post']) > 10:
             res = dbase.addPost(request.form['name'], request.form['post'], request.form['url'])
             if not res:
-                flash('Ошибка добавления статьи', category = 'error')
+                flash('Ошибка добавления статьи', category='error')
             else:
                 flash('Статья добавлена успешно', category='success')
         else:
             flash('Ошибка добавления статьи', category='error')
 
-    return render_template('add_post.html', menu = dbase.getMenu(), title="Добавление статьи")
+    return render_template('add_post.html', menu=dbase.getMenu(), title="Добавление статьи")
 
 
 @app.route("/post/<alias>")
@@ -121,11 +128,12 @@ def showPost(alias):
 
     return render_template('post.html', menu=dbase.getMenu(), title=title, post=post)
 
+
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    #db = connect_db()
-    #cursor = db.cursor()
-    #cursor.execute("""INSERT INTO USERS (name, email,psw, time) VALUES ('admin','admin', '21232f297a57a5a743894a0e4a801fc3', 60);""")
+    # db = connect_db()
+    # cursor = db.cursor()
+    # cursor.execute("""INSERT INTO USERS (name, email,psw, time) VALUES ('admin','admin', '21232f297a57a5a743894a0e4a801fc3', 60);""")
     print("test log")
 
     formEmail = request.form['username']
@@ -137,6 +145,7 @@ def login():
         userlogin = userLogin().create(user)
         login_user(userlogin, remember=False)
         print("test  here user", user)
+        print("test  here user TYPE", type(user))
         # return user #redirect(request.args.get("next") or url_for("profile"))
 
         flash("Неверная пара логин/пароль", "error")
@@ -144,20 +153,24 @@ def login():
         print("test  after log user: ", user['id'])
 
         expires = datetime.timedelta(days=1)
-        access_token = create_access_token(identity=str(user['id']), expires_delta=expires)
-
+        access_token = create_access_token(identity=str(user['id']), expires_delta=expires)[0:32]
+        tokenCheckSave = dbase.saveToken(access_token, user['id'])
+        print(tokenCheckSave)
+        print("длина токена: ", len(access_token))
         print("test  access_token: ", access_token)
-        print(type(user))
+        print(type(access_token))
 
-        return {"access_token": access_token, "id":  str(user['id']), "role": (user['role']), "username": (user['username'])}, 200 #render_template("login.html", menu=dbase.getMenu(), title="Авторизация", form=form)
+        return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
+        user['username'])}, 200  # render_template("login.html", menu=dbase.getMenu(), title="Авторизация", form=form)
     return {"error": 'Email or password invalid'}, 401
+
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
     # form = RegisterForm()
     formEmail = request.form['username']
     formPassword = request.form['psw']
-    #if form.validate_on_submit():test log
+    # if form.validate_on_submit():test log
     print("test log register", formEmail, formPassword)
     hash = generate_password_hash(formPassword)
     print("test log register hash ", hash)
@@ -179,10 +192,18 @@ def logout():
     flash("Вы вышли из аккаунта", "success")
     return redirect(url_for('login'))
 
-@app.route('/profile')
+
+@app.route('/profile', methods=["POST", "GET"])
 @login_required
 def profile():
-    return render_template("profile.html", menu=dbase.getMenu(), title="Профиль")
+    formEmail = request.form['username']
+    formPassword = request.form['token']
+    user = dbase.getUserByUsername(formEmail)
+    tokendb = dbase.gettoken(formPassword)
+    if tokendb == user['token']:
+        return True, print("token is ok"), {"access_token": user['token'], "id": str(user['id']), "role": (user['role']), "username": (
+        user['username'])}
+    return False, render_template("profile.html", menu=dbase.getMenu(), title="Профиль")
 
 
 @app.route('/userava')
@@ -195,6 +216,7 @@ def userava():
     h = make_response(img)
     h.headers['Content-Type'] = 'image/png'
     return h
+
 
 @app.route('/upload', methods=["POST", "GET"])
 @login_required
@@ -214,6 +236,7 @@ def upload():
             flash("Ошибка обновления аватара", "error")
 
     return redirect(url_for('profile'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

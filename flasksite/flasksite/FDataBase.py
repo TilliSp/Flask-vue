@@ -131,3 +131,29 @@ class FDataBase:
         return True
 
 
+    def saveToken(self, access_token, user_id):
+        try:
+            self.__cur.execute("UPDATE users SET token = ? WHERE id = ?", (access_token, user_id))
+            self.__db.commit()
+        except sqlite3.Error as e:
+            print("Ошибка добавления токена в БД: " + str(e))
+            return False
+        return True
+
+    def getToken(self, user_id):
+        try:
+            self.__cur.execute(f"SELECT token FROM users WHERE id = ? LIMIT 1", (user_id))
+            res = self.__cur.fetchone()
+            if res:
+                return res
+        except sqlite3.Error as e:
+            print("Ошибка получения токена из БД " + str(e))
+
+    def validationToken(self,):
+        try:
+            self.__cur.execute()
+            self.__db.commit()
+        except sqlite3.Error as e:
+            print("Ошибка проверки токена в БД: " + str(e))
+            return False
+        return True
