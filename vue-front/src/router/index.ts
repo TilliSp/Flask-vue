@@ -48,22 +48,36 @@ const routes: Array<RouteConfig> = [
         path: '/registration',
         name: 'Registration',
         component: () =>
-            import(/* webpackChunkName: "registration" */ '@/views/Registration.vue')
+          import(/* webpackChunkName: "registration" */ '@/views/Registration.vue')
       },
       {
         path: '/books',
         name: 'Books',
         component: () =>
-            import(/* webpackChunkName: "books" */ '@/views/Books.vue'),
+          import(/* webpackChunkName: "books" */ '@/views/Books.vue'),
         beforeEnter: ifAuthenticated
       },
       {
         path: '/test',
         name: 'Test',
         component: () =>
-            import(/* webpackChunkName: "books" */ '@/views/Test.vue'),
+          import(/* webpackChunkName: "books" */ '@/views/Test.vue'),
         beforeEnter: ifAuthenticated
       },
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: () =>
+          import(/* webpackChunkName: "books" */ '@/views/Profile.vue'),
+        beforeEnter: ifAuthenticated
+      },
+      {
+        path: '/passswordChange',
+        name: 'PassswordChange',
+        component: () =>
+          import(/* webpackChunkName: "books" */ '@/views/PassswordChange.vue'),
+        beforeEnter: ifAuthenticated
+      }
     ]
   }
 ]

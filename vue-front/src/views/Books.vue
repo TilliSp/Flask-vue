@@ -129,10 +129,9 @@
 </template>
 
 <script>
-import axios from 'axios';
-import store from "../store";
-import { method } from 'lodash';
-
+import axios from 'axios'
+import store from '../store'
+import { method } from 'lodash'
 
 export default {
   data() {

@@ -124,6 +124,10 @@ class UserActions extends Actions<
       console.error(err)
     }
   }
+  // getUserRequest() {
+  //   const response = UserAPI.getUser(this.state.userId)
+  //   this.mutations.setUserInfo(response.data)
+  // }
 }
 
 export const user = new Module({
