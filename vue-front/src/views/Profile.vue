@@ -6,11 +6,12 @@
     </button>
     <br />
     <hr />
+    <PassswordChange/>
   </div>
 </template>
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import Registration from '@/views/PasswordChange.vue'
+import PassswordChange from '@/views/PasswordChange.vue'
 import { RouteConfigSingleView } from 'vue-router/types/router'
 import { userMapper } from '@/store/modules/user'
 import store from '@/store'
@@ -26,18 +27,18 @@ const Mappers = Vue.extend({
   }
 })
 
-// @Component({ 
-//     components: {   PasswordChange  } 
-// })
+@Component({ 
+    components: {   PassswordChange  } 
+})
 
-// export default class Auth extends Mapper {
-//   private allFill = false
-//   private passChange() {
-//     //this.$router.push('/registration')
-//     this.$bvModal.show('passwordModal')
-//   }
-// }
-// </script>
+export default class Profile extends Mappers {
+  private allFill = false
+  private passChange() {
+    //this.$router.push('/registration')
+    this.$bvModal.show('passwordModal')
+  }
+}
+</script>
 
 <style scoped>
 .sidebar-header {

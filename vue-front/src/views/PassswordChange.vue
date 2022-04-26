@@ -86,7 +86,7 @@ const Mapper = Vue.extend({
 @Component({
   components: { }
 })
-export default class Registration extends Mapper {
+export default class PassswordChange extends Mapper {
   private allFill = false
   private authData = {
     login: '', //'test1@mail.ru',

@@ -124,10 +124,29 @@ class UserActions extends Actions<
       console.error(err)
     }
   }
-  // getUserRequest() {
-  //   const response = UserAPI.getUser(this.state.userId)
-  //   this.mutations.setUserInfo(response.data)
-  // }
+  async getUserRequest() {
+    try {
+      this.state.isBadAuth = false
+      const response = await UserAPI.login(loginObj)//token+username
+      if (!_.isEmpty(response.data.access_token) && !_.isEmpty(response.data.id)) {
+        this.mutations.setNewUserInfo(response.data)
+        console.log('test response.data: ', response.data, response.data.access_token)
+        const token = localStorage.getItem('user-token')
+        if (token) {
+          http.defaults.headers.common['Authorization'] = 'Bearer ' + token
+        }
+        this.state.isAuthenticated = true
+      }
+    } catch (err) {
+      localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
+      this.state.isAuthenticated = false
+      if (err.response.status === 401) {
+        this.state.isBadAuth = true
+      } else {
+        console.error(err)
+      }
+    }
+  }
 }
 
 export const user = new Module({
