@@ -5,7 +5,7 @@ import {
   Module,
   createMapper
 } from 'vuex-smart-module'
-import UserAPI, { UserRegister, UserLogin } from '@/api/user.ts'
+import UserAPI, { UserRegister, UserLogin, UserRequest } from '@/api/user.ts'
 import { http } from '@/api/httpAxios'
 import _ from 'lodash'
 
@@ -28,6 +28,10 @@ class UserState {
     type: '',
     username: '',
     customer: ''
+  }
+  userReq = {
+    username: '',
+    role: ''
   }
   isAdmin = false
   isBadAuth = false
@@ -66,6 +70,12 @@ class UserMutations extends Mutations<UserState> {
     this.state.userInfo.customer = userInfo.customer
     this.state.userInfo.type = userInfo.type
     this.state.userInfo.surname = userInfo.surname
+  }
+  setUserReq(userInfo: UserLoginInfoI) {
+    this.state.username = userInfo.username
+    this.state.userId = userInfo.id
+    this.state.role = userInfo.role
+    this.state.token = userInfo.access_token
   }
 }
 
@@ -126,11 +136,21 @@ class UserActions extends Actions<
   }
   async getUserRequest() {
     try {
-      this.state.isBadAuth = false
-      const response = await UserAPI.login(loginObj)//token+username
-      if (!_.isEmpty(response.data.access_token) && !_.isEmpty(response.data.id)) {
-        this.mutations.setNewUserInfo(response.data)
-        console.log('test response.data: ', response.data, response.data.access_token)
+      const reqObj: any = {
+        username: localStorage.getItem('user-username'),
+        token: localStorage.getItem('user-token')
+      }
+      const response = await UserAPI.req(reqObj) //token+username
+      if (
+        !_.isEmpty(response.data.access_token) &&
+        !_.isEmpty(response.data.id)
+      ) {
+        this.mutations.setUserReq(response.data)
+        console.log(
+          'TEST_TEST response.data: ',
+          response.data,
+          response.data.access_token
+        )
         const token = localStorage.getItem('user-token')
         if (token) {
           http.defaults.headers.common['Authorization'] = 'Bearer ' + token

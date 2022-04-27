@@ -14,6 +14,10 @@ export interface UserLogin {
   username: string
   password: string
 }
+export interface UserRequest {
+  username: string
+  token: string
+}
 
 export default class UserAPI {
   public static register(userInfo: UserRegister) {
@@ -29,6 +33,12 @@ export default class UserAPI {
     data.append('psw', userInfo.password)
     return http.post(`/login`, data)
     //return http.post(`/login`, { ...userInfo })
+  }
+  public static req(userInfo: UserRequest) {
+    const data = new FormData()
+    data.append('username', userInfo.username)
+    data.append('token', userInfo.token)
+    return http.post(`/req`, data)
   }
   public static getUser(idUser: string) {
     return http.get(`/${idUser}`)

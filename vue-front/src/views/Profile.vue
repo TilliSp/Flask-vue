@@ -6,35 +6,31 @@
     </button>
     <br />
     <hr />
-    <PassswordChange/>
+    <PasswordChange />
   </div>
 </template>
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
-import PassswordChange from '@/views/PasswordChange.vue'
-import { RouteConfigSingleView } from 'vue-router/types/router'
+import { Component, Vue } from 'vue-property-decorator'
+import PasswordChange from '@/views/PasswordChange.vue'
+//import { RouteConfigSingleView } from 'vue-router/types/router'
+import UserAPI from "@/api/user";
 import { userMapper } from '@/store/modules/user'
 import store from '@/store'
 import _ from 'lodash'
 
 const Mappers = Vue.extend({
   computed: {
-     ...userMapper.mapState(['userInfo', 'isBadAuth']),
      ...userMapper.mapState(['username'])
-  },
-  methods: {
-    ...userMapper.mapActions(['fetchLoginUser'])
   }
 })
 
 @Component({ 
-    components: {   PassswordChange  } 
+    components: {   PasswordChange  } 
 })
 
 export default class Profile extends Mappers {
   private allFill = false
   private passChange() {
-    //this.$router.push('/registration')
     this.$bvModal.show('passwordModal')
   }
 }

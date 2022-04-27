@@ -31,6 +31,9 @@
         placeholder="Password"
         trim
       />
+      <div v-if="strCheckPage(authData.password)" style="color: red; text-align: center;">
+          Пароль может содержать только буквы и цифры!
+        </div>
     </div>
       <div class="w-100 p-2">
         <label class="centertext align-content-center">Подтверждение пароля</label>

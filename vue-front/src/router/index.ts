@@ -3,13 +3,20 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import store from '../store'
 import _ from 'lodash'
+import { userMapper } from '@/store/modules/user'
 
+const Mapper = Vue.extend({
+  methods: {
+    ...userMapper.mapActions(['getUserRequest'])
+  }
+})
 Vue.use(VueRouter)
 
 const ifAuthenticated = (to: any, from: any, next: any) => {
   const token = localStorage.getItem('user-token')
   if (!_.isEmpty(token)) {
     store.state.user.isAuthenticated = true
+    //store.state.user.getUserRequest(token)
     next()
     return
   }
@@ -61,21 +68,23 @@ const routes: Array<RouteConfig> = [
         path: '/test',
         name: 'Test',
         component: () =>
-          import(/* webpackChunkName: "books" */ '@/views/Test.vue'),
+          import(/* webpackChunkName: "test" */ '@/views/Test.vue'),
         beforeEnter: ifAuthenticated
       },
       {
         path: '/profile',
         name: 'Profile',
         component: () =>
-          import(/* webpackChunkName: "books" */ '@/views/Profile.vue'),
+          import(/* webpackChunkName: "profile" */ '@/views/Profile.vue'),
         beforeEnter: ifAuthenticated
       },
       {
-        path: '/passswordChange',
-        name: 'PassswordChange',
+        path: '/passwordChange',
+        name: 'PasswordChange',
         component: () =>
-          import(/* webpackChunkName: "books" */ '@/views/PassswordChange.vue'),
+          import(
+            /* webpackChunkName: "passswordChange" */ '@/views/PasswordChange.vue'
+          ),
         beforeEnter: ifAuthenticated
       }
     ]

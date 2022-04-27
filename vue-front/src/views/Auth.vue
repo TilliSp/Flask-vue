@@ -57,7 +57,7 @@
 
       <br />
     </div>
-    <Registration/>
+    <Registration />
   </div>
 </template>
 
