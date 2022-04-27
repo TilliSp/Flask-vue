@@ -80,7 +80,7 @@ class FDataBase:
                 print("Пользователь с таким username уже существует")
                 return False
 
-            self.__cur.execute("INSERT INTO users VALUES(NULL, ?, ?, datetime('now'), 0)", (username, hpsw))
+            self.__cur.execute("INSERT INTO users VALUES(NULL, ?, ?, datetime('now'), 0,0)", (username, hpsw))
             self.__db.commit()
         except sqlite3.Error as e:
             print("Ошибка добавления пользователя в БД " + str(e))

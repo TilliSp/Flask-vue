@@ -77,7 +77,7 @@ def before_request():
 @app.after_request
 def after_request(response):
     print('after_request')
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8081')
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')
     response.headers.add('Access-Control-Allow-Headers',
                          'Origin, X-Requested-With, Content-Type, Accept, Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS, HEAD')
@@ -184,15 +184,17 @@ def register():
 
     return {"error": 'Email or password invalid'}, 401
 
-
+@app.route("/passChange", methods=["POST", "GET"])
+@login_required
 def passwordChange():
+    print('test pass')
     formUsername = request.form['username']
-    formPasswordOld = request.form['pswOld']
-    formPasswordNew = request.form['psw']
+    formPasswordOld = request.form['passwordOld']
+    formPasswordNew = request.form['password']
     user = dbase.getUserByUsername(formUsername)
     if user['psw'] == formPasswordOld:
         dbase.passwordCh(formUsername, formPasswordNew)
-        return True, 200
+        return True, 200, print('test pass OK')
     return False, 401
 
 
