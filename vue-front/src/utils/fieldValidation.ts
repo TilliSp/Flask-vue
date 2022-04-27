@@ -19,6 +19,6 @@ export function checkEmail(testArg: any) {
 }
 
 export function strCheck(testArg: any) {
-  const objRE = /^([A-Za-z0-9_\-.@!])+$/ // fragment locator
+  const objRE = /^([A-Za-z0-9_\-.@!]){6,}$/ // fragment locator
   return !!objRE.test(testArg)
 }

@@ -18,6 +18,12 @@ export interface UserRequest {
   username: string
   token: string
 }
+export interface PasswordChangeI {
+  username: string
+  passwordOld: string
+  password: string
+  passwordConfirm: string
+}
 
 export default class UserAPI {
   public static register(userInfo: UserRegister) {
@@ -39,6 +45,13 @@ export default class UserAPI {
     data.append('username', userInfo.username)
     data.append('token', userInfo.token)
     return http.post(`/req`, data)
+  }
+  public static passChange(userInfo: PasswordChangeI) {
+    const data = new FormData()
+    data.append('username', userInfo.username)
+    data.append('passwordOld', userInfo.passwordOld)
+    data.append('password', userInfo.password)
+    return http.post(`/passChange`, data)
   }
   public static getUser(idUser: string) {
     return http.get(`/${idUser}`)

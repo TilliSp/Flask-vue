@@ -31,7 +31,7 @@
         placeholder="Password"
         trim
       />
-      <div v-if="strCheckPage(authData.password)" style="color: red; text-align: center;">
+      <div v-if="authData.password.length>0 && !strCheckPage(authData.password)" style="color: red; text-align: center;">
           Пароль может содержать только буквы и цифры!
         </div>
     </div>

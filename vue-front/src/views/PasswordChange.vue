@@ -79,13 +79,16 @@
 
  import { Component, Vue } from 'vue-property-decorator'
  // //import { checkEmail } from '@/utils/fieldValidation'
- import UserAPI from "@/api/user";
+ import UserAPI from "@/api/user"
+ import {PasswordChangeI}  from "@/api/user"
+  import passChange  from "@/api/user";
  import { userMapper } from '@/store/modules/user'
-import {strCheck} from "@/utils/fieldValidation";
+import {strCheck} from "@/utils/fieldValidation"
+
 
 const Mapper = Vue.extend({
   computed: {
-    ...userMapper.mapState(['userInfo', 'isBadAuth'])
+    ...userMapper.mapState(['userInfo', 'isBadAuth','username'])
   },
   methods: {
     ...userMapper.mapActions(['fetchRegisterUser'])
@@ -97,11 +100,13 @@ const Mapper = Vue.extend({
 })
 export default class PasswordChange extends Mapper {  
   private allFill = false
-  private authData = {
+  private authData:PasswordChangeI = {
+    username: this.username,
     passwordOld: '', //'test1@mail.ru',
     password: '', //'test'
     passwordConfirm: ''
   }
+  // private PasswordChangeI = this.authData
   //const passwordField = document.querySelector('#nameUserAuth')
   private showPassword(){
     console.log('test showPassword: ')
@@ -129,9 +134,10 @@ export default class PasswordChange extends Mapper {
   private confirmPassword() {
     return this.authData.passwordConfirm !== '' && this.authData.passwordConfirm !== this.authData.password
   }
-  private async passChange() {
-    console.log('test passChange: ')
-  }
+  //  private async registrationClick(){
+  //     await this.passChange(PasswordChangeI)
+  //   console.log('test passChange: ')
+  //  }
   
 }
 </script>
