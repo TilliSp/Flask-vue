@@ -157,3 +157,12 @@ class FDataBase:
             print("Ошибка проверки токена в БД: " + str(e))
             return False
         return True
+
+    def passwordCh(self, username, psw):
+        try:
+            self.__cur.execute(f"UPDATE users SET psw = ? WHERE username = ?", (psw, username))
+            self.__db.commit()
+        except sqlite3.Error as e:
+            print("Ошибка замены пароля в БД: " + str(e))
+            return False
+        return True

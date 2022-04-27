@@ -77,7 +77,7 @@ def before_request():
 @app.after_request
 def after_request(response):
     print('after_request')
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8080')
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:8081')
     response.headers.add('Access-Control-Allow-Headers',
                          'Origin, X-Requested-With, Content-Type, Accept, Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS, HEAD')
@@ -185,6 +185,17 @@ def register():
     return {"error": 'Email or password invalid'}, 401
 
 
+def passwordChange():
+    formUsername = request.form['username']
+    formPasswordOld = request.form['pswOld']
+    formPasswordNew = request.form['psw']
+    user = dbase.getUserByUsername(formUsername)
+    if user['psw'] == formPasswordOld:
+        dbase.passwordCh(formUsername, formPasswordNew)
+        return True, 200
+    return False, 401
+
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -196,10 +207,10 @@ def logout():
 @app.route('/profile', methods=["POST", "GET"])
 @login_required
 def profile():
-    formEmail = request.form['username']
-    formPassword = request.form['token']
-    user = dbase.getUserByUsername(formEmail)
-    tokendb = dbase.gettoken(formPassword)
+    formUsername = request.form['username']
+    formToken = request.form['token']
+    user = dbase.getUserByUsername(formUsername)
+    tokendb = dbase.gettoken(formToken)
     if tokendb == user['token']:
         return True, print("token is ok"), {"access_token": user['token'], "id": str(user['id']), "role": (user['role']), "username": (
         user['username'])}
@@ -236,6 +247,10 @@ def upload():
             flash("Ошибка обновления аватара", "error")
 
     return redirect(url_for('profile'))
+
+
+
+
 
 
 if __name__ == "__main__":
