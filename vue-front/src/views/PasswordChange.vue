@@ -1,11 +1,10 @@
 <template>
   <div class="authCard">
     <b-modal
-      hide-footer="true"
       id="passwordModal"
-      title="Регистрация"
+      title="Смена пароля"
       size="lg"
-      @ok="passChange"
+      @ok="registrationClick()"
     >
       <div class="w-100 p-2">
         <label class="centertext">Старый пароль:</label>
@@ -15,13 +14,14 @@
           id="nameUserAuth"
           @input="onChangeField"
           v-model="authData.passwordOld"
-          :state="!!authData.passwordOld.length && strCheckPage(authData.passwordOld)"
+          :state="
+            !!authData.passwordOld.length && strCheckPage(authData.passwordOld)
+          "
           placeholder="Введите старый пароль"
           trim
         />
       </div>
-      <input type="checkbox" onclick="showPassword()">Show Password
-
+      <input type="checkbox" onclick="showPassword()" />Show Password
 
       <div class="w-100 p-2">
         <label class="centertext">Новый пароль:</label>
@@ -54,18 +54,16 @@
           Пароли не совпадают!
         </div>
       </div>
-      <div class="row authButton mt-2"  style="justify-content: center">
-        
-          <b-button
-            style="float: left"
-            @click="registrationClick()"
-            class="ml-4 btn-primary-outline authInputButton"
-            variant="secondary"
-            :disabled="!allFill"
-          >
-            Сохранить
-          </b-button>
-       
+      <div class="row authButton mt-2" style="justify-content: center">
+        <b-button
+          style="float: left"
+          @click="registrationClick()"
+          class="ml-4 btn-primary-outline authInputButton"
+          variant="secondary"
+          :disabled="!allFill"
+        >
+          Сохранить
+        </b-button>
       </div>
 
       <br />
@@ -74,47 +72,38 @@
 </template>
 
 <script lang="ts">
-
-
-
- import { Component, Vue } from 'vue-property-decorator'
- // //import { checkEmail } from '@/utils/fieldValidation'
- import UserAPI from "@/api/user"
- import {PasswordChangeI}  from "@/api/user"
-  import passChange  from "@/api/user";
- import { userMapper } from '@/store/modules/user'
-import {strCheck} from "@/utils/fieldValidation"
-
+import { Component, Vue } from 'vue-property-decorator'
+// //import { checkEmail } from '@/utils/fieldValidation'
+import UserAPI from '@/api/user'
+import { PasswordChangeI } from '@/api/user'
+import { userMapper } from '@/store/modules/user'
+import { strCheck } from '@/utils/fieldValidation'
 
 const Mapper = Vue.extend({
   computed: {
-    ...userMapper.mapState(['userInfo', 'isBadAuth','username'])
+    ...userMapper.mapState(['userInfo', 'username']),
   },
   methods: {
-    ...userMapper.mapActions(['fetchRegisterUser'])
-  }
+    ...userMapper.mapActions(['fetchRegisterUser']),
+  },
 })
 
 @Component({
-  components: { }
+  components: {},
 })
-export default class PasswordChange extends Mapper {  
+export default class PasswordChange extends Mapper {
   private allFill = false
-  private authData:PasswordChangeI = {
+  private authData: PasswordChangeI = {
     username: this.username,
     passwordOld: '', //'test1@mail.ru',
     password: '', //'test'
-    passwordConfirm: ''
+    passwordConfirm: '',
   }
-  // private PasswordChangeI = this.authData
   //const passwordField = document.querySelector('#nameUserAuth')
-  private showPassword(){
+  private showPassword() {
     console.log('test showPassword: ')
   }
 
-  // private checkEmail() {
-  //   return checkEmail(this.authData.login)
-  // }
   private strCheckPage(value: string) {
     return strCheck(value)
   }
@@ -124,21 +113,25 @@ export default class PasswordChange extends Mapper {
   }
   private onChangeField() {
     this.allFill =
-        this.authData.passwordOld !== ''
-        && this.authData.password !== ''
-        && this.authData.password === this.authData.passwordConfirm
-        && strCheck(this.authData.passwordOld)
-        && strCheck(this.authData.password)
+      this.authData.passwordOld !== '' &&
+      this.authData.password !== '' &&
+      this.authData.password === this.authData.passwordConfirm &&
+      strCheck(this.authData.passwordOld) &&
+      strCheck(this.authData.password)
   }
 
   private confirmPassword() {
-    return this.authData.passwordConfirm !== '' && this.authData.passwordConfirm !== this.authData.password
+    return (
+      this.authData.passwordConfirm !== '' &&
+      this.authData.passwordConfirm !== this.authData.password
+    )
   }
-  //  private async registrationClick(){
-  //     await this.passChange(PasswordChangeI)
-  //   console.log('test passChange: ')
-  //  }
-  
+
+  private async registrationClick() {
+    await UserAPI.passChange(this.authData)
+    console.log('test passChange: ')
+    console.log(UserAPI.passChange(this.authData))
+  }
 }
 </script>
 

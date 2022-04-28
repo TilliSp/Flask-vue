@@ -1,6 +1,6 @@
 <template>
   <div class="authCard">
-    <b-modal hide-footer="true"
+    <b-modal 
         id="registrationModal"
         title="Регистрация"
         size="lg"
@@ -32,7 +32,7 @@
         trim
       />
       <div v-if="authData.password.length>0 && !strCheckPage(authData.password)" style="color: red; text-align: center;">
-          Пароль может содержать только буквы и цифры!
+          Пароль может содержать только латинские буквы, цифры и символы: .!@-_
         </div>
     </div>
       <div class="w-100 p-2">
@@ -79,7 +79,7 @@ import {strCheck} from "@/utils/fieldValidation";
 
 const Mapper = Vue.extend({
   computed: {
-    ...userMapper.mapState(['userInfo', 'isBadAuth'])
+    ...userMapper.mapState(['userInfo'])
   },
   methods: {
     ...userMapper.mapActions(['fetchRegisterUser'])

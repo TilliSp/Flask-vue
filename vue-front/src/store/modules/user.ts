@@ -53,6 +53,7 @@ class UserMutations extends Mutations<UserState> {
     this.state.userId = userInfo.id
     this.state.username = userInfo.username
     this.state.role = userInfo.role ?? 0
+    this.state.isAdmin = this.state.role === '4'
     this.state.token = userInfo.access_token
     localStorage.setItem('user-token', userInfo.access_token)
     localStorage.setItem('user-username', userInfo.username)
@@ -105,9 +106,13 @@ class UserActions extends Actions<
     try {
       this.state.isBadAuth = false
       const response = await UserAPI.login(loginObj)
-      if (!_.isEmpty(response.data.access_token) && !_.isEmpty(response.data.id)) {
+      if (
+        response &&
+        !_.isEmpty(response.data.access_token) &&
+        !_.isEmpty(response.data.id)
+      ) {
         this.mutations.setNewUserInfo(response.data)
-        console.log('test response.data: ', response.data, response.data.access_token)
+        console.log('test response.data: ', response.data)
         const token = localStorage.getItem('user-token')
         if (token) {
           http.defaults.headers.common['Authorization'] = 'Bearer ' + token
@@ -117,11 +122,8 @@ class UserActions extends Actions<
     } catch (err) {
       localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
       this.state.isAuthenticated = false
-      if (err.response.status === 401) {
-        this.state.isBadAuth = true
-      } else {
-        console.error(err)
-      }
+      this.state.isBadAuth = true
+      console.error(err)
     }
   }
   async fetchGetUser() {

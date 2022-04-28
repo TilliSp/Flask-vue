@@ -71,7 +71,7 @@ import {strCheck} from "@/utils/fieldValidation";
 
 const Mapper = Vue.extend({
   computed: {
-    ...userMapper.mapState(['userInfo', 'isBadAuth'])
+    ...userMapper.mapState(['userInfo'])
   },
   methods: {
     ...userMapper.mapActions(['fetchLoginUser'])

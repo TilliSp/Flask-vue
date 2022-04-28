@@ -26,19 +26,23 @@ export interface PasswordChangeI {
 }
 
 export default class UserAPI {
-  public static register(userInfo: UserRegister) {
-    const data = new FormData()
-    data.append('username', userInfo.username)
-    data.append('psw', userInfo.password)
-
-    return http.post(`/register`, data)
+  public static async requestPost(method: string, json: any) {
+    const result = await http.post(`/${method}`, json)
+    if ('data' in result) {
+      return result
+      // parse code http FIXME
+    }
+    return false
   }
-  public static login(userInfo: UserLogin) {
-    const data = new FormData()
-    data.append('username', userInfo.username)
-    data.append('psw', userInfo.password)
-    return http.post(`/login`, data)
-    //return http.post(`/login`, { ...userInfo })
+  public static register(json: UserRegister) {
+    // const data = new FormData()
+    // data.append('username', userInfo.username)
+    // data.append('psw', userInfo.password)
+    // return http.post(`/register`, data)
+    return http.post('register', json)
+  }
+  public static login(json: UserLogin) {
+    return this.requestPost('login',json)
   }
   public static req(userInfo: UserRequest) {
     const data = new FormData()
