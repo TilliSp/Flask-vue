@@ -158,9 +158,9 @@ class FDataBase:
             return False
         return True
 
-    def passwordCh(self, username, psw):
+    def passwordCh(self, username, hpsw):
         try:
-            self.__cur.execute(f"UPDATE users SET psw = ? WHERE username = ?", (psw, username))
+            self.__cur.execute(f"UPDATE users SET psw = ? WHERE username = ?", (hpsw, username))
             self.__db.commit()
         except sqlite3.Error as e:
             print("Ошибка замены пароля в БД: " + str(e))

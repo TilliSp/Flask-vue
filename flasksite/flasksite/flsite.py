@@ -68,10 +68,14 @@ dbase = None
 
 @app.before_request
 def before_request():
-    """Установление соединения с БД перед выполнением запроса"""
-    global dbase
-    db = get_db()
-    dbase = FDataBase(db)
+    if request.method == "POST":
+        if request.json:
+            global dbase
+            db = get_db()
+            dbase = FDataBase(db)
+        else:
+            return {"error": 'cannot parse body'}, 500
+
 
 
 @app.after_request
@@ -129,40 +133,36 @@ def showPost(alias):
     return render_template('post.html', menu=dbase.getMenu(), title=title, post=post)
 
 
-@app.route("/login", methods=["POST", "GET"])
+@app.route("/login", methods=["POST"])
 def login():
-    # db = connect_db()
-    # cursor = db.cursor()
-    # cursor.execute("""INSERT INTO USERS (name, email,psw, time) VALUES ('admin','admin', '21232f297a57a5a743894a0e4a801fc3', 60);""")
-    print("test log")
+    if 'username' in request.json and 'password' in request.json:
+        user_data = request.json
+        user = dbase.getUserByUsername(user_data['username'])
+        print("test  before user", user, user and check_password_hash(user['psw'], user_data['password']))
+        if user and check_password_hash(user['psw'], user_data['password']):
+            print("test  before user if __ ", user)
+            userlogin = userLogin().create(user)
+            login_user(userlogin, remember=False)
+            print("test  here user", user)
+            print("test  here user TYPE", type(user))
+            # return user #redirect(request.args.get("next") or url_for("profile"))
 
-    formEmail = request.form['username']
-    formPassword = request.form['psw']
-    user = dbase.getUserByUsername(formEmail)
-    print("test  before user", user, user and check_password_hash(user['psw'], formPassword))
-    if user and check_password_hash(user['psw'], formPassword):
-        print("test  before user if __ ", user)
-        userlogin = userLogin().create(user)
-        login_user(userlogin, remember=False)
-        print("test  here user", user)
-        print("test  here user TYPE", type(user))
-        # return user #redirect(request.args.get("next") or url_for("profile"))
+            flash("Неверная пара логин/пароль", "error")
 
-        flash("Неверная пара логин/пароль", "error")
+            print("test  after log user: ", user['id'])
 
-        print("test  after log user: ", user['id'])
+            expires = datetime.timedelta(days=1)
+            access_token = create_access_token(identity=str(user['id']), expires_delta=expires)[0:32]
+            tokenCheckSave = dbase.saveToken(access_token, user['id'])
+            print(tokenCheckSave)
+            print("длина токена: ", len(access_token))
+            print("test  access_token: ", access_token)
+            print(type(access_token))
 
-        expires = datetime.timedelta(days=1)
-        access_token = create_access_token(identity=str(user['id']), expires_delta=expires)[0:32]
-        tokenCheckSave = dbase.saveToken(access_token, user['id'])
-        print(tokenCheckSave)
-        print("длина токена: ", len(access_token))
-        print("test  access_token: ", access_token)
-        print(type(access_token))
-
-        return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
-        user['username'])}, 200  # render_template("login.html", menu=dbase.getMenu(), title="Авторизация", form=form)
-    return {"error": 'Email or password invalid'}, 401
+            return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
+            user['username'])}, 200
+        return {"error": 'Email or password invalid'}, 401
+    return {"error": 'cannot found required fields'}, 401
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -192,10 +192,11 @@ def passwordChange():
     formPasswordOld = request.form['passwordOld']
     formPasswordNew = request.form['password']
     user = dbase.getUserByUsername(formUsername)
-    if user['psw'] == formPasswordOld:
-        dbase.passwordCh(formUsername, formPasswordNew)
-        return True, 200, print('test pass OK')
-    return False, 401
+    print('test pass before', formUsername, user['psw'], formPasswordOld, check_password_hash(user['psw'], formPasswordOld))
+    if check_password_hash(user['psw'], formPasswordOld):
+        dbase.passwordCh(formUsername, generate_password_hash(formPasswordNew))
+        return  'OK', 200, print('test pass OK', user['psw'], formPasswordOld, check_password_hash(user['psw'], formPasswordOld))
+    return 'NOT OK', 401, print('test pass NOT OK', user['psw'], formPasswordOld, check_password_hash(user['psw'], formPasswordOld))
 
 
 @app.route('/logout')

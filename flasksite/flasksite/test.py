@@ -2,10 +2,13 @@ import json
 import sqlite3
 import re
 
+from werkzeug.security import generate_password_hash
+
+hash = generate_password_hash('admin1')
 conn = sqlite3.connect('flsite.db')
 cursor = conn.cursor()
 #cursor.execute("SELECT * FROM users WHERE id=9")
-#cursor.execute("UPDATE users SET role=4 WHERE id=9")
+#cursor.execute("UPDATE users SET psw=? WHERE id=9", (hash))
 #cursor.execute("ALTER TABLE users ADD token VARCHAR")
 cursor.execute("SELECT * FROM users")
 #cursor.execute("ALTER TABLE users ADD role bit DEFAULT 0")
