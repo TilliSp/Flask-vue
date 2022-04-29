@@ -168,36 +168,41 @@ def login():
 @app.route("/register", methods=["POST", "GET"])
 def register():
     # form = RegisterForm()
-    formEmail = request.form['username']
-    formPassword = request.form['psw']
-    # if form.validate_on_submit():test log
-    print("test log register", formEmail, formPassword)
-    hash = generate_password_hash(formPassword)
-    print("test log register hash ", hash)
-    res = dbase.addUser(formEmail, hash)
-    print("test log res", res)
-    if res:
-        flash("Вы успешно зарегистрированы", "success")
-        return {"ok": True}, 200
-    else:
-        flash("Ошибка при добавлении в БД", "error")
+    if 'username' in request.json and 'password' in request.json:
+        user_data = request.json
+        # formEmail = request.form['username']
+        # formPassword = request.form['psw']
+        # if form.validate_on_submit():test log
+        print("test log register", user_data['username'], user_data['password'])
+        hash = generate_password_hash(user_data['password'])
+        print("test log register hash ", hash)
+        res = dbase.addUser(user_data['username'], hash)
+        print("test log res", res)
+        if res:
+            flash("Вы успешно зарегистрированы", "success")
+            return {"ok": True}, 200
+        else:
+            flash("Ошибка при добавлении в БД", "error")
 
-    return {"error": 'Email or password invalid'}, 401
+        return {"error": 'Email or password invalid'}, 401
 
 @app.route("/passChange", methods=["POST", "GET"])
 @login_required
 def passwordChange():
     print('test pass')
-    formUsername = request.form['username']
-    formPasswordOld = request.form['passwordOld']
-    formPasswordNew = request.form['password']
-    user = dbase.getUserByUsername(formUsername)
-    print('test pass before', formUsername, user['psw'], formPasswordOld, check_password_hash(user['psw'], formPasswordOld))
-    if check_password_hash(user['psw'], formPasswordOld):
-        dbase.passwordCh(formUsername, generate_password_hash(formPasswordNew))
-        return  'OK', 200, print('test pass OK', user['psw'], formPasswordOld, check_password_hash(user['psw'], formPasswordOld))
-    return 'NOT OK', 401, print('test pass NOT OK', user['psw'], formPasswordOld, check_password_hash(user['psw'], formPasswordOld))
-
+    # formUsername = request.form['username']
+    # formPasswordOld = request.form['passwordOld']
+    # formPasswordNew = request.form['password']
+    if 'username' in request.json and 'password' in request.json:
+        print('test pa5y6yss')
+        user_data = request.json
+        user = dbase.getUserByUsername(user_data['username'])
+        print('test pass before', user_data['username'], user['psw'], user_data['passwordOld'], check_password_hash(user['psw'], user_data['passwordOld']))
+        # if check_password_hash(user['psw'], user_data['passwordOld']):
+        #     dbase.passwordCh(user_data['username'], generate_password_hash(user_data['password']))
+        #     return  'OK', 200, print('test pass OK', user['psw'], user_data['passwordOld'], check_password_hash(user['psw'], user_data['passwordOld']))
+        return 'NOT OK', 401, print('test pass NOT OK', user['psw'], user_data['passwordOld'], check_password_hash(user['psw'], user_data['passwordOld']))
+    return {"error": 'cannot found required fields'}, 401, print('test thth')
 
 @app.route('/logout')
 @login_required
