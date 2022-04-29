@@ -35,6 +35,7 @@ class UserState {
   }
   isAdmin = false
   isBadAuth = false
+  isManager = false
 }
 
 class UserGetters extends Getters<UserState> {
@@ -54,6 +55,7 @@ class UserMutations extends Mutations<UserState> {
     this.state.username = userInfo.username
     this.state.role = userInfo.role ?? 0
     this.state.isAdmin = this.state.role === '4'
+    this.state.isManager = this.state.role === '2'
     this.state.token = userInfo.access_token
     localStorage.setItem('user-token', userInfo.access_token)
     localStorage.setItem('user-username', userInfo.username)
@@ -89,7 +91,6 @@ class UserActions extends Actions<
   async fetchRegisterUser(registerObj: UserRegister) {
     try {
       const response = await UserAPI.register(registerObj)
-      //this.mutations.setNewUserId(response.data.id)
       console.log('test response: ', response.data)
       if (response.data.ok) {
         await this.actions.fetchLoginUser({

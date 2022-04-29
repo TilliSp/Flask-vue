@@ -60,7 +60,6 @@
           @click="registrationClick()"
           class="ml-4 btn-primary-outline authInputButton"
           variant="secondary"
-          :disabled="!allFill"
         >
           Сохранить
         </b-button>
@@ -85,6 +84,7 @@ const Mapper = Vue.extend({
   },
   methods: {
     ...userMapper.mapActions(['fetchRegisterUser']),
+    ...userMapper.mapMutations(['setNewUserInfo'])
   },
 })
 
@@ -97,7 +97,7 @@ export default class PasswordChange extends Mapper {
     username: this.username,
     passwordOld: '', //'test1@mail.ru',
     password: '', //'test'
-    passwordConfirm: '',
+    passwordConfirm: ''
   }
   //const passwordField = document.querySelector('#nameUserAuth')
   private showPassword() {
@@ -130,7 +130,6 @@ export default class PasswordChange extends Mapper {
   private async registrationClick() {
     await UserAPI.passChange(this.authData)
     console.log('test passChange: ')
-    console.log(UserAPI.passChange(this.authData))
   }
 }
 </script>

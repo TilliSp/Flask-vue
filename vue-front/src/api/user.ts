@@ -42,7 +42,7 @@ export default class UserAPI {
     return http.post('register', json)
   }
   public static login(json: UserLogin) {
-    return this.requestPost('login',json)
+    return this.requestPost('login', json)
   }
   public static req(userInfo: UserRequest) {
     const data = new FormData()
@@ -50,12 +50,8 @@ export default class UserAPI {
     data.append('token', userInfo.token)
     return http.post(`/req`, data)
   }
-  public static passChange(userInfo: PasswordChangeI) {
-    const data = new FormData()
-    data.append('username', userInfo.username)
-    data.append('passwordOld', userInfo.passwordOld)
-    data.append('password', userInfo.password)
-    return http.post(`/passChange`, data)
+  public static passChange(json: PasswordChangeI) {
+    return http.post('passChange', json)
   }
   public static getUser(idUser: string) {
     return http.get(`/${idUser}`)
