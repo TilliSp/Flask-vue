@@ -3,7 +3,7 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import store from '../store'
 import _ from 'lodash'
-import { userMapper } from '@/store/modules/user'
+import { user, userMapper } from '@/store/modules/user'
 
 const Mapper = Vue.extend({
   methods: {
@@ -12,6 +12,7 @@ const Mapper = Vue.extend({
 })
 Vue.use(VueRouter)
 
+// var userInfo = new user
 const ifAuthenticated = (to: any, from: any, next: any) => {
   const token = localStorage.getItem('user-token')
   if (!_.isEmpty(token)) {
@@ -62,6 +63,7 @@ const routes: Array<RouteConfig> = [
         name: 'Books',
         component: () =>
           import(/* webpackChunkName: "books" */ '@/views/Books.vue'),
+        // beforeEnter: user.isAuth() && user.isOperator()
         beforeEnter: ifAuthenticated
       },
       {

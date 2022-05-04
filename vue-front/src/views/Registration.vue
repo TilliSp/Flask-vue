@@ -27,7 +27,6 @@
         type="password"
         @input="onChangeField"
         v-model="authData.password"
-        :state="!!authData.password.length && strCheckPage(authData.password)"
         placeholder="Password"
         trim
       />

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-10">
-        <h1>Books</h1>
+        <h1>Пользователи</h1>
         <button
             style="float:right;"
             type="button"
@@ -12,14 +12,15 @@
           Logout
         </button>
 
-        <button type="button" class="btn btn-success btn-sm" v-b-modal.book-modal>Add Book</button>
+        <button style="display: none;" type="button" class="btn btn-success btn-sm" v-b-modal.book-modal>Add Book</button>
+        <button style="margin-left: 0px;margin-right: 0px" type="button" class="btn btn-success btn-sm" >Показать пользователей</button>
         <br><br>
         <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col">Title</th>
-              <th scope="col">Author</th>
-              <th scope="col">Read?</th>
+              <th scope="col">Имя</th>
+              <th scope="col">Роль</th>
               <th></th>
             </tr>
           </thead>

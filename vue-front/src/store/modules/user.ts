@@ -6,7 +6,6 @@ import {
   createMapper
 } from 'vuex-smart-module'
 import UserAPI, { UserRegister, UserLogin, UserRequest } from '@/api/user.ts'
-import { http } from '@/api/httpAxios'
 import _ from 'lodash'
 
 interface UserLoginInfoI {
@@ -38,6 +37,70 @@ class UserState {
   isManager = false
 }
 
+/*
+class user {
+  private boolean: any._isAdmin = false
+  private this: boolean._isOperator = false
+  private this: boolean._isAuth = false
+  constructor(user){
+     this.user = user; }
+    // get local item
+    getItem() {
+      let token = localStorage.getItem('user-token')
+      //валидацию только на сервере или на клиенте тоже?(profile)
+      const tokenF = token||false
+      if (tokenF) {
+        let tokenInfo = UserAPI.checkToken(token)
+        (this._isAdmin,this._isOperator) = user.getRole(tokenInfo.role)
+      }
+    }
+    // check token in local storage `
+    // if token is true, get info user / generate role / get avatar
+    // this._isAuth = true
+    // if token is not true -> this.clearToken()
+    // route -> redir /login
+
+    // this.isAuth = true
+    // this.role = this.getRole()
+    
+    
+    
+  }
+  static getRole(role){
+    let payload = {isAdmin:false,isOperator:false}
+    switch(role){
+      case 2:
+        payload = {isAdmin:false,isOperator:true}
+      break;
+      case 4:
+        payload = {isAdmin:true,isOperator:true}
+      break;
+    }
+    return payload
+  }
+  rewriteRole(role){
+    switch(role){
+      case 2:
+        this.isOperator = true
+        break;
+      case 4: 
+        this._isAdmin =  true
+        this.isOperator = true
+        break;
+    }
+  }
+  isAdmin(){
+    return this._isAdmin;
+  }
+  isOperator(){
+    return this._isOperator;
+  }
+  isAuth(){
+    return this._isAuth;
+  }
+
+}
+*/
 class UserGetters extends Getters<UserState> {
   // TODO
 }
@@ -114,10 +177,6 @@ class UserActions extends Actions<
       ) {
         this.mutations.setNewUserInfo(response.data)
         console.log('test response.data: ', response.data)
-        const token = localStorage.getItem('user-token')
-        if (token) {
-          http.defaults.headers.common['Authorization'] = 'Bearer ' + token
-        }
         this.state.isAuthenticated = true
       }
     } catch (err) {
@@ -146,7 +205,7 @@ class UserActions extends Actions<
       const response = await UserAPI.req(reqObj) //token+username
       if (
         !_.isEmpty(response.data.access_token) &&
-        !_.isEmpty(response.data.id)
+        !_.isEmpty(response.data.id)// FIX
       ) {
         this.mutations.setUserReq(response.data)
         console.log(
@@ -154,10 +213,6 @@ class UserActions extends Actions<
           response.data,
           response.data.access_token
         )
-        const token = localStorage.getItem('user-token')
-        if (token) {
-          http.defaults.headers.common['Authorization'] = 'Bearer ' + token
-        }
         this.state.isAuthenticated = true
       }
     } catch (err) {

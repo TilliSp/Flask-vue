@@ -27,7 +27,12 @@ export interface PasswordChangeI {
 
 export default class UserAPI {
   public static async requestPost(method: string, json: any) {
-    const result = await http.post(`/${method}`, json)
+    const token = localStorage.getItem('user-token')
+    let headers = {}
+    if (token) {
+      headers =  { Authorization: 'Bearer ' + token }
+    }
+    const result = await http.post(`/${method}`, json, {headers})
     if ('data' in result) {
       return result
       // parse code http FIXME
@@ -48,15 +53,12 @@ export default class UserAPI {
     const data = new FormData()
     data.append('username', userInfo.username)
     data.append('token', userInfo.token)
-    return http.post(`/req`, data)
+    return this.requestPost(`/req`, {})// TODO
   }
   public static passChange(json: PasswordChangeI) {
-    return http.post('passChange', json)
+    return this.requestPost('passChange', json)
   }
-  public static getUser(idUser: string) {
-    return http.get(`/${idUser}`)
-  }
-  public static editUser(userId: string, userInfo: any) {
-    return http.put(`/${userId}`, { ...userInfo })
+  public static profile() {
+    return this.requestPost(`/profile`, {})
   }
 }
