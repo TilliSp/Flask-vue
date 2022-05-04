@@ -153,6 +153,7 @@ class FDataBase:
         try:
             self.__cur.execute()
             self.__db.commit()
+
         except sqlite3.Error as e:
             print("Ошибка проверки токена в БД: " + str(e))
             return False
@@ -164,5 +165,14 @@ class FDataBase:
             self.__db.commit()
         except sqlite3.Error as e:
             print("Ошибка замены пароля в БД: " + str(e))
+            return False
+        return True
+
+    def getAllUsersAuth(self, user_id):
+        try:
+            self.__cur.execute(f"SELECT users, role FROM users")
+            self.__db.commit()
+        except sqlite3.Error as e:
+            print("Ошибка вывода пользователей из БД: " + str(e))
             return False
         return True

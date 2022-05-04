@@ -66,6 +66,8 @@ def get_db():
 dbase = None
 
 
+
+
 @app.before_request
 def before_request():
     if request.method == "POST":
@@ -73,9 +75,14 @@ def before_request():
             global dbase
             db = get_db()
             dbase = FDataBase(db)
+            if str(request.url_rule) not in ['/login','/register']:
+                print(str(request.url_rule))
+                # CHECK TOKEN THIS!
+                # IF NOT AUTH -> redir to login
+            else:
+                print('YAY')
         else:
             return {"error": 'cannot parse body'}, 500
-
 
 
 @app.after_request
@@ -108,7 +115,7 @@ def index():
     return render_template('index.html', menu=dbase.getMenu(), posts=dbase.getPostsAnonce())
 
 
-@app.route("/add_post", methods=["POST", "GET"])
+@app.route("/add_post", methods=["POST"])
 def addPost():
     if request.method == "POST":
         if len(request.form['name']) > 4 and len(request.form['post']) > 10:
@@ -160,12 +167,12 @@ def login():
             print(type(access_token))
 
             return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
-            user['username'])}, 200
+                user['username'])}, 200
         return {"error": 'Email or password invalid'}, 401
     return {"error": 'cannot found required fields'}, 401
 
 
-@app.route("/register", methods=["POST", "GET"])
+@app.route("/register", methods=["POST"])
 def register():
     # form = RegisterForm()
     if 'username' in request.json and 'password' in request.json:
@@ -173,11 +180,11 @@ def register():
         # formEmail = request.form['username']
         # formPassword = request.form['psw']
         # if form.validate_on_submit():test log
-        print("test log register", user_data['username'], user_data['password'])
+        # print("test log register", user_data['username'], user_data['password'])
         hash = generate_password_hash(user_data['password'])
-        print("test log register hash ", hash)
+        # print("test log register hash ", hash)
         res = dbase.addUser(user_data['username'], hash)
-        print("test log res", res)
+        # print("test log res", res)
         if res:
             flash("Вы успешно зарегистрированы", "success")
             return {"ok": True}, 200
@@ -186,6 +193,7 @@ def register():
 
         return {"error": 'Email or password invalid'}, 401
 
+
 @app.route("/passChange", methods=["POST", "GET"])
 @login_required
 def passwordChange():
@@ -193,16 +201,19 @@ def passwordChange():
     # formUsername = request.form['username']
     # formPasswordOld = request.form['passwordOld']
     # formPasswordNew = request.form['password']
-    if 'username' in request.json and 'password' in request.json:
+    if 'username' in request.json and 'password' in request.json:  # id
         print('test pa5y6yss')
         user_data = request.json
         user = dbase.getUserByUsername(user_data['username'])
-        print('test pass before', user_data['username'], user['psw'], user_data['passwordOld'], check_password_hash(user['psw'], user_data['passwordOld']))
+        print('test pass before', user_data['username'], user['psw'], user_data['passwordOld'],
+              check_password_hash(user['psw'], user_data['passwordOld']))
         # if check_password_hash(user['psw'], user_data['passwordOld']):
         #     dbase.passwordCh(user_data['username'], generate_password_hash(user_data['password']))
         #     return  'OK', 200, print('test pass OK', user['psw'], user_data['passwordOld'], check_password_hash(user['psw'], user_data['passwordOld']))
-        return 'NOT OK', 401, print('test pass NOT OK', user['psw'], user_data['passwordOld'], check_password_hash(user['psw'], user_data['passwordOld']))
+        return 'NOT OK', 401, print('test pass NOT OK', user['psw'], user_data['passwordOld'],
+                                    check_password_hash(user['psw'], user_data['passwordOld']))
     return {"error": 'cannot found required fields'}, 401, print('test thth')
+
 
 @app.route('/logout')
 @login_required
@@ -212,17 +223,22 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/profile', methods=["POST", "GET"])
+@app.route('/profile', methods=["POST"])
 @login_required
 def profile():
-    formUsername = request.form['username']
-    formToken = request.form['token']
-    user = dbase.getUserByUsername(formUsername)
-    tokendb = dbase.gettoken(formToken)
-    if tokendb == user['token']:
-        return True, print("token is ok"), {"access_token": user['token'], "id": str(user['id']), "role": (user['role']), "username": (
-        user['username'])}
-    return False, render_template("profile.html", menu=dbase.getMenu(), title="Профиль")
+    print("profile before ok")
+    if 'token' in request.json:  #idusername
+        resp = dbase.gettoken(request.json.token)
+        if resp.id:
+            user = dbase.getUserByUsername(resp.id)
+            return True, print("token is ok"), {"userInfo":{"id": int(user['id']),
+                                                "role": (user['role']), "username": (user['username']), "created":str(user['created'])}}
+        return False
+
+
+def admin():
+
+    return True
 
 
 @app.route('/userava')
@@ -255,10 +271,6 @@ def upload():
             flash("Ошибка обновления аватара", "error")
 
     return redirect(url_for('profile'))
-
-
-
-
 
 
 if __name__ == "__main__":
