@@ -114,7 +114,6 @@ class FDataBase:
             return res
         except sqlite3.Error as e:
             print("Ошибка получения данных из БД " + str(e))
-
         return False
 
     def updateUserAvatar(self, avatar, user_id):
@@ -123,7 +122,7 @@ class FDataBase:
 
         try:
             binary = sqlite3.Binary(avatar)
-            self.__cur.execute(f"UPDATE users SET avatar = ? WHERE id = ?", (binary, user_id))
+            self.__cur.execute(f"UPDATE users SET avatar = ? WHERE id = ?", binary, user_id)
             self.__db.commit()
         except sqlite3.Error as e:
             print("Ошибка обновления аватара в БД: " + str(e))
@@ -142,20 +141,21 @@ class FDataBase:
 
     def getToken(self, user_id):
         try:
-            self.__cur.execute(f"SELECT token FROM users WHERE id = ? LIMIT 1", (user_id))
+            self.__cur.execute(f"SELECT token FROM users WHERE id = ? LIMIT 1", user_id)
             res = self.__cur.fetchone()
             if res:
                 return res
         except sqlite3.Error as e:
             print("Ошибка получения токена из БД " + str(e))
 
-    def validationToken(self,):
+    def validationToken(self, token):
         try:
-            self.__cur.execute()
-            self.__db.commit()
-
+            self.__cur.execute(f"SELECT id FROM users WHERE token = ? LIMIT 1", token)
+            res = self.__cur.fetchone()
+            if res:
+                return res
         except sqlite3.Error as e:
-            print("Ошибка проверки токена в БД: " + str(e))
+            print("Токен не найден в БД: " + str(e))
             return False
         return True
 

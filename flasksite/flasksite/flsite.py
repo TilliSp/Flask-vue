@@ -1,5 +1,7 @@
 import sqlite3
 import os
+
+import flask
 from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, make_response
 from sqlalchemy.dialects.sqlite import json
 
@@ -65,18 +67,32 @@ def get_db():
 
 dbase = None
 
-
-
-
 @app.before_request
-def before_request():
+def before_request(isAuth=False):
+    g.user = {'isAuth': False, 'id': None}
     if request.method == "POST":
         if request.json:
             global dbase
             db = get_db()
             dbase = FDataBase(db)
-            if str(request.url_rule) not in ['/login','/register']:
+            if str(request.url_rule) not in ['/login', '/register']:
                 print(str(request.url_rule))
+                request_token = request.headers.get('Authorization')
+                if request_token:
+                    # Bearer 123123123123123123123
+                    try:
+                        request_token = request_token.split()[1]
+                    except:
+                        #токен пустой
+                        return
+                    if (len(request_token)==32 ):
+                        response = dbase.validationToken(request_token)
+                        if response.id:
+                            g.user['isAuth'] = True
+                            g.user['id'] = response.id
+
+
+
                 # CHECK TOKEN THIS!
                 # IF NOT AUTH -> redir to login
             else:
@@ -223,21 +239,19 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/profile', methods=["POST"])
+@app.route('/validation', methods=["POST"])
 @login_required
-def profile():
+def validation():
     print("profile before ok")
-    if 'token' in request.json:  #idusername
-        resp = dbase.gettoken(request.json.token)
-        if resp.id:
-            user = dbase.getUserByUsername(resp.id)
-            return True, print("token is ok"), {"userInfo":{"id": int(user['id']),
-                                                "role": (user['role']), "username": (user['username']), "created":str(user['created'])}}
+    if g.user['isAuth'] and g.user['id']:
+        userInfo = dbase.getUser(g.user['id'])
+        if userInfo:
+            return {"userInfo": {"role": (userInfo['role']), "username": (userInfo['username']),
+                                                             "created": str(userInfo['created'])}}
         return False
 
 
 def admin():
-
     return True
 
 
