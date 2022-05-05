@@ -7,6 +7,9 @@ import {
 } from 'vuex-smart-module'
 import UserAPI, { UserRegister, UserLogin, UserRequest } from '@/api/user.ts'
 import _ from 'lodash'
+import VueRouter, { RouteConfig } from 'vue-router'
+import router from '@/router'
+import { http } from '@/api/httpAxios'
 
 interface UserLoginInfoI {
   username: string
@@ -37,36 +40,23 @@ class UserState {
   isManager = false
 }
 
-/*
-class user {
-  private boolean: any._isAdmin = false
-  private this: boolean._isOperator = false
-  private this: boolean._isAuth = false
-  constructor(user){
-     this.user = user; }
-    // get local item
-    getItem() {
-      let token = localStorage.getItem('user-token')
-      //валидацию только на сервере или на клиенте тоже?(profile)
-      const tokenF = token||false
-      if (tokenF) {
-        let tokenInfo = UserAPI.checkToken(token)
-        (this._isAdmin,this._isOperator) = user.getRole(tokenInfo.role)
-      }
-    }
-    // check token in local storage `
-    // if token is true, get info user / generate role / get avatar
-    // this._isAuth = true
-    // if token is not true -> this.clearToken()
-    // route -> redir /login
 
-    // this.isAuth = true
-    // this.role = this.getRole()
-    
-    
-    
+export class __user {
+  private _isAdmin: boolean = false
+  private _isOperator: boolean = false
+  private _isAuth: boolean = false
+  private _token: any = null
+  private _userInfo = {role:0, username: 'unknown'}
+  setUserInfo(userInfo: any) {
+    userInfo.username = userInfo.username
+    userInfo.role = userInfo.role
+    userInfo.created = userInfo.created
   }
-  static getRole(role){
+  clearToken() {
+    localStorage.removeItem('user-token')
+    this._isAuth = false
+  }
+  static getRole(role: any){
     let payload = {isAdmin:false,isOperator:false}
     switch(role){
       case 2:
@@ -78,17 +68,28 @@ class user {
     }
     return payload
   }
-  rewriteRole(role){
-    switch(role){
-      case 2:
-        this.isOperator = true
-        break;
-      case 4: 
-        this._isAdmin =  true
-        this.isOperator = true
-        break;
-    }
+  constructor() {
+     
   }
+    // get local item
+    getItem( tokenObj : UserRequest) {
+     
+        let tokenInfo = UserAPI.checkToken(this._token)
+        if (tokenInfo) {
+          const userInfo = JSON.parse(tokenInfo)
+          this.setUserInfo(userInfo)
+          this._isAuth = true
+          let result = __user.getRole(userInfo.role)
+          this._isAdmin = result.isAdmin // FIX
+          this._isOperator = result.isOperator
+        }else{ 
+      this.clearToken()}
+    }
+    // check token in local storage `
+    // if token is true, get info user / generate role / get avatar
+    // this._isAuth = true
+    // if token is not true -> this.clearToken()
+    // route -> redir /login
   isAdmin(){
     return this._isAdmin;
   }
@@ -98,9 +99,9 @@ class user {
   isAuth(){
     return this._isAuth;
   }
-
+  
 }
-*/
+
 class UserGetters extends Getters<UserState> {
   // TODO
 }
@@ -166,24 +167,39 @@ class UserActions extends Actions<
       console.error(err)
     }
   }
+  
   async fetchLoginUser(loginObj: UserLogin) {
     try {
-      this.state.isBadAuth = false
-      const response = await UserAPI.login(loginObj)
-      if (
-        response &&
-        !_.isEmpty(response.data.access_token) &&
-        !_.isEmpty(response.data.id)
-      ) {
-        this.mutations.setNewUserInfo(response.data)
-        console.log('test response.data: ', response.data)
-        this.state.isAuthenticated = true
+      if (!this.state.isAuthenticated) {
+        const isToken = !!localStorage.getItem('user-token')
+        this.state.isBadAuth = false
+        let response = null
+        if (isToken) {
+          response = await UserAPI.getUserByToken(loginObj)
+        } else {
+          response = await UserAPI.login(loginObj)
+        }
+        //const response = isToken ? await UserAPI.getUserByToken(loginObj) : await UserAPI.login(loginObj)
+        if (!_.isEmpty(response.data.accesstoken) && !.isEmpty(response.data.id)) {
+          this.mutations.setNewUserInfo(response.data)
+          console.log('test response.data: ', response.data, response.data.access_token)
+          if (!isToken) {
+            const token = localStorage.getItem('user-token')
+            if (token) {
+              http.defaults.headers.common['Authorization'] = 'Bearer ' + token
+            }
+          }
+          this.state.isAuthenticated = true
+        }
       }
     } catch (err) {
       localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
       this.state.isAuthenticated = false
-      this.state.isBadAuth = true
-      console.error(err)
+      if (err.response.status === 401) {
+        this.state.isBadAuth = true
+      } else {
+        console.error(err)
+      }
     }
   }
   async fetchGetUser() {
@@ -207,12 +223,7 @@ class UserActions extends Actions<
         !_.isEmpty(response.data.access_token) &&
         !_.isEmpty(response.data.id)// FIX
       ) {
-        this.mutations.setUserReq(response.data)
-        console.log(
-          'TEST_TEST response.data: ',
-          response.data,
-          response.data.access_token
-        )
+        this.mutations.setUserReq(response.data)        
         this.state.isAuthenticated = true
       }
     } catch (err) {
@@ -233,5 +244,5 @@ export const user = new Module({
   mutations: UserMutations,
   actions: UserActions
 })
-
 export const userMapper = createMapper(user)
+

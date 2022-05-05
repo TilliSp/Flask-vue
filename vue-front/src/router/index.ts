@@ -3,8 +3,9 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import store from '../store'
 import _ from 'lodash'
-import { user, userMapper } from '@/store/modules/user'
-
+import root from '@/store/'
+import __user from '@/store/'
+import {userMapper} from '@/store/modules/user'
 const Mapper = Vue.extend({
   methods: {
     ...userMapper.mapActions(['getUserRequest'])
@@ -14,7 +15,7 @@ Vue.use(VueRouter)
 
 // var userInfo = new user
 const ifAuthenticated = (to: any, from: any, next: any) => {
-  const token = localStorage.getItem('user-token')
+  //if (__user._isAuth){}
   if (!_.isEmpty(token)) {
     store.state.user.isAuthenticated = true
     //store.state.user.getUserRequest(token)

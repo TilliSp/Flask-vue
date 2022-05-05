@@ -15,7 +15,6 @@ export interface UserLogin {
   password: string
 }
 export interface UserRequest {
-  username: string
   token: string
 }
 export interface PasswordChangeI {
@@ -29,7 +28,7 @@ export default class UserAPI {
   public static async requestPost(method: string, json: any) {
     const token = localStorage.getItem('user-token')
     let headers = {}
-    if (token) {
+    if (token !== null && token.length === 32) {
       headers =  { Authorization: 'Bearer ' + token }
     }
     const result = await http.post(`/${method}`, json, {headers})
@@ -44,16 +43,16 @@ export default class UserAPI {
     // data.append('username', userInfo.username)
     // data.append('psw', userInfo.password)
     // return http.post(`/register`, data)
-    return http.post('register', json)
+    return this.requestPost('register', json)
   }
   public static login(json: UserLogin) {
     return this.requestPost('login', json)
   }
-  public static req(userInfo: UserRequest) {
-    const data = new FormData()
-    data.append('username', userInfo.username)
-    data.append('token', userInfo.token)
-    return this.requestPost(`/req`, {})// TODO
+  public static checkToken(json: UserRequest) {
+    // const data = new FormData()
+    // data.append('username', userInfo.username)
+    // data.append('token', userInfo.token)
+    return this.requestPost(`/req`, json) // TODO
   }
   public static passChange(json: PasswordChangeI) {
     return this.requestPost('passChange', json)
