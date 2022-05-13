@@ -150,6 +150,7 @@ class FDataBase:
 
     def validationToken(self, token):
         try:
+            print(token)
             self.__cur.execute(f"SELECT id FROM users WHERE token = ? LIMIT 1", token)
             res = self.__cur.fetchone()
             if res:

@@ -67,9 +67,10 @@ def get_db():
 
 dbase = None
 
+
 @app.before_request
 def before_request(isAuth=False):
-    g.user = {'isAuth': False, 'id': None}
+    g.user = {'isAuth': False, 'id': False}
     if request.method == "POST":
         if request.json:
             global dbase
@@ -83,15 +84,15 @@ def before_request(isAuth=False):
                     try:
                         request_token = request_token.split()[1]
                     except:
-                        #токен пустой
+                        # токен пустой
                         return
-                    if (len(request_token)==32 ):
+                    if (len(request_token) == 32):
                         response = dbase.validationToken(request_token)
-                        if response.id:
+                        if response and response.id:
                             g.user['isAuth'] = True
                             g.user['id'] = response.id
-
-
+                        else:
+                            {'User is not Auth'}, 403
 
                 # CHECK TOKEN THIS!
                 # IF NOT AUTH -> redir to login
@@ -243,12 +244,14 @@ def logout():
 @login_required
 def validation():
     print("profile before ok")
+    print("isAuth.user:", g.user['isAuth'], "id.user:", g.user['id'])
     if g.user['isAuth'] and g.user['id']:
+        print("OK?")
         userInfo = dbase.getUser(g.user['id'])
         if userInfo:
             return {"userInfo": {"role": (userInfo['role']), "username": (userInfo['username']),
-                                                             "created": str(userInfo['created'])}}
-        return False
+                                 "created": str(userInfo['created'])}}
+    return {"error": 'cannot found required fields'}, 401, print('test thth')
 
 
 def admin():

@@ -7,10 +7,10 @@ from werkzeug.security import generate_password_hash
 hash = generate_password_hash('admin1')
 conn = sqlite3.connect('flsite.db')
 cursor = conn.cursor()
-#cursor.execute("SELECT * FROM users WHERE id=9")
+#cursor.execute("SELECT id FROM users WHERE token = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1 LIMIT 1")
 #cursor.execute("UPDATE users SET psw=? WHERE id=9", (hash))
-cursor.execute("DELETE FROM users WHERE id=11")
-cursor.execute("SELECT * FROM users")
+#cursor.execute("DELETE FROM users WHERE id=11")
+#cursor.execute("SELECT * FROM users where username = 'admin'")
 #cursor.execute("ALTER TABLE users ADD role bit DEFAULT 0")
 #conn.execute('''CREATE TABLE IF NOT EXISTS users
 #	(id	INTEGER  PRIMARY KEY AUTOINCREMENT NOT NULL,
