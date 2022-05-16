@@ -4,7 +4,8 @@ import os
 import flask
 from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, make_response
 from sqlalchemy.dialects.sqlite import json
-
+from random import choice
+from string import ascii_uppercase
 from FDataBase import FDataBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager
@@ -12,9 +13,7 @@ from flask_jwt_extended import create_access_token
 import datetime
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from UserLogin import userLogin
-from forms import LoginForm, RegisterForm
 from admin.admin import admin
-
 from flask_cors import CORS
 
 # конфигурация
@@ -23,9 +22,21 @@ DEBUG = True
 SECRET_KEY = 'fdgfh78@#5?>gfhf89dx,v06k'
 MAX_CONTENT_LENGTH = 1024 * 1024
 
+
 app = Flask(__name__)
+# jwt_test GWtJ310XJwinmvzZ  jwt_base
 app.config.from_object(__name__)
-app.config.update(dict(DATABASE=os.path.join(app.root_path, 'flsite.db')))
+
+dbase = None
+
+app.config['MYSQL_HOST'] = '192.168.101.11'
+app.config['MYSQL_USER'] = 'jwt_test'
+app.config['MYSQL_PASSWORD'] = 'GWtJ310XJwinmvzZ'
+app.config['MYSQL_DB'] = 'jwt_base'
+
+
+dbase = FDataBase(app)
+
 jwt = JWTManager(app)
 
 app.register_blueprint(admin, url_prefix='/admin')
@@ -36,6 +47,8 @@ login_manager.login_message = "Авторизуйтесь для доступа 
 login_manager.login_message_category = "success"
 CORS(app)
 
+def generate_token():
+    return ''.join(choice(ascii_uppercase) for i in range(32))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -43,29 +56,9 @@ def load_user(user_id):
     return userLogin().fromDB(user_id, dbase)
 
 
-def connect_db():
-    conn = sqlite3.connect(app.config['DATABASE'])
-    conn.row_factory = sqlite3.Row
-    return conn
 
 
-def create_db():
-    """Вспомогательная функция для создания таблиц БД"""
-    db = connect_db()
-    with app.open_resource('sq_db.sql', mode='r') as f:
-        db.cursor().executescript(f.read())
-    db.commit()
-    db.close()
-
-
-def get_db():
-    '''Соединение с БД, если оно еще не установлено'''
-    if not hasattr(g, 'link_db'):
-        g.link_db = connect_db()
-    return g.link_db
-
-
-dbase = None
+# for example -> create file migrate.py [create sqlite database + shema]
 
 
 @app.before_request
@@ -74,8 +67,6 @@ def before_request(isAuth=False):
     if request.method == "POST":
         if request.json:
             global dbase
-            db = get_db()
-            dbase = FDataBase(db)
             if str(request.url_rule) not in ['/login', '/register']:
                 print(str(request.url_rule))
                 request_token = request.headers.get('Authorization')
@@ -86,16 +77,16 @@ def before_request(isAuth=False):
                     except:
                         # токен пустой
                         return
-                    if (len(request_token) == 32):
+                    print('token validation ',request_token)
+                    if len(request_token) == 32:
                         response = dbase.validationToken(request_token)
-                        if response and response.id:
+                        print('token validation ', response)
+                        if response and response['id']:
                             g.user['isAuth'] = True
-                            g.user['id'] = response.id
+                            g.user['id'] = response['id']
+                            return
                         else:
-                            {'User is not Auth'}, 403
-
-                # CHECK TOKEN THIS!
-                # IF NOT AUTH -> redir to login
+                            return {'User is not Auth'}, 403
             else:
                 print('YAY')
         else:
@@ -161,27 +152,20 @@ def showPost(alias):
 def login():
     if 'username' in request.json and 'password' in request.json:
         user_data = request.json
+        print("INPUT DATA ", user_data)
         user = dbase.getUserByUsername(user_data['username'])
-        print("test  before user", user, user and check_password_hash(user['psw'], user_data['password']))
+        print("PSW DATA ", user)
         if user and check_password_hash(user['psw'], user_data['password']):
-            print("test  before user if __ ", user)
-            userlogin = userLogin().create(user)
-            login_user(userlogin, remember=False)
-            print("test  here user", user)
-            print("test  here user TYPE", type(user))
-            # return user #redirect(request.args.get("next") or url_for("profile"))
+            print("test  here user TYPE", type(user['username']))
 
             flash("Неверная пара логин/пароль", "error")
 
             print("test  after log user: ", user['id'])
 
-            expires = datetime.timedelta(days=1)
-            access_token = create_access_token(identity=str(user['id']), expires_delta=expires)[0:32]
-            tokenCheckSave = dbase.saveToken(access_token, user['id'])
-            print(tokenCheckSave)
-            print("длина токена: ", len(access_token))
-            print("test  access_token: ", access_token)
+            access_token = generate_token()
+            print(access_token)
             print(type(access_token))
+            dbase.saveToken(access_token,user['id'])
 
             return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
                 user['username'])}, 200
@@ -199,7 +183,7 @@ def register():
         # if form.validate_on_submit():test log
         # print("test log register", user_data['username'], user_data['password'])
         hash = generate_password_hash(user_data['password'])
-        # print("test log register hash ", hash)
+        #print("test log register hash ", hash)
         res = dbase.addUser(user_data['username'], hash)
         # print("test log res", res)
         if res:
@@ -241,7 +225,6 @@ def logout():
 
 
 @app.route('/validation', methods=["POST"])
-@login_required
 def validation():
     print("profile before ok")
     print("isAuth.user:", g.user['isAuth'], "id.user:", g.user['id'])
@@ -250,7 +233,7 @@ def validation():
         userInfo = dbase.getUser(g.user['id'])
         if userInfo:
             return {"userInfo": {"role": (userInfo['role']), "username": (userInfo['username']),
-                                 "created": str(userInfo['created'])}}
+                                 "created": str(userInfo['created'])}},200
     return {"error": 'cannot found required fields'}, 401, print('test thth')
 
 

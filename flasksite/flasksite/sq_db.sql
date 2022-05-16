@@ -21,8 +21,8 @@ token VARCHAR(32)
 
 CREATE TABLE IF NOT EXISTS sessions (
 session_id	INTEGER UNSIGNED PRIMARY KEY AUTOINCREMENT    NOT NULL,
-id_user        INTEGER NOT NULL,
+user_id        INTEGER NOT NULL,
 access_token   VARCHAR(32),
-date_created   DATE,
+date_created   DATETIME,
 FOREIGN KEY(id_user) REFERENCES USERS(id_user)
 );
