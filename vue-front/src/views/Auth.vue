@@ -113,8 +113,13 @@ export default class Auth extends Mapper {
     }
     // await UserAPI.login(objReq)
     // this.userInfo.username = this.authData.login
-    await this.fetchLoginUser(objReq)
-    this.$router.push('/books')
+    const data =await this.fetchLoginUser(objReq)
+    if(data.ok){
+      this.$router.push('/profile')
+    }else{ 
+      // toastr message - unknown user or password
+      console.log(data)
+    }
   }
 }
 </script>

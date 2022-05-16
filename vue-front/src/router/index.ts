@@ -3,17 +3,12 @@ import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import store from '../store'
 import _ from 'lodash'
-import root from '@/store/'
-import __user from '@/store/'
-import {userMapper} from '@/store/modules/user'
-const Mapper = Vue.extend({
-  methods: {
-    ...userMapper.mapActions(['getUserRequest'])
-  }
-})
+import { userMapper } from '@/store/modules/user'
+import { userModule } from '@/store'
+
 Vue.use(VueRouter)
 
-// var userInfo = new user
+/*
 const ifAuthenticated = (to: any, from: any, next: any) => {
   //if (__user._isAuth){}
   if (!_.isEmpty(token)) {
@@ -25,6 +20,7 @@ const ifAuthenticated = (to: any, from: any, next: any) => {
   //console.log('test ifAuthenticated if elfse: ', token)
   next('/auth')
 }
+*/
 
 const routes: Array<RouteConfig> = [
   {
@@ -39,19 +35,19 @@ const routes: Array<RouteConfig> = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import(/* webpackChunkName: "about" */ '@/views/About.vue')
-      },
-      {
-        path: '/lorem',
-        name: 'Lorem',
-        component: () =>
-            import(/* webpackChunkName: "lorem" */ '@/views/Lorem.vue')
+          import(/* webpackChunkName: "about" */ '@/views/About.vue')
       },
       {
         path: '/auth',
         name: 'MainPage',
         component: () =>
-            import(/* webpackChunkName: "main" */ '@/views/MainPage.vue'),
+          import(/* webpackChunkName: "main" */ '@/views/MainPage.vue'),
+      },
+      {
+        path: '/books',
+        name: 'Books',
+        component: () =>
+          import(/* webpackChunkName: "books" */ '@/views/Books.vue'),
       },
       {
         path: '/registration',
@@ -60,26 +56,19 @@ const routes: Array<RouteConfig> = [
           import(/* webpackChunkName: "registration" */ '@/views/Registration.vue')
       },
       {
-        path: '/books',
-        name: 'Books',
-        component: () =>
-          import(/* webpackChunkName: "books" */ '@/views/Books.vue'),
-        // beforeEnter: user.isAuth() && user.isOperator()
-        beforeEnter: ifAuthenticated
-      },
-      {
         path: '/test',
         name: 'Test',
         component: () =>
           import(/* webpackChunkName: "test" */ '@/views/Test.vue'),
-        beforeEnter: ifAuthenticated
+        //beforeEnter: ifAuthenticated
       },
       {
         path: '/profile',
         name: 'Profile',
+        meta: { requiresAuth: true },
         component: () =>
           import(/* webpackChunkName: "profile" */ '@/views/Profile.vue'),
-        beforeEnter: ifAuthenticated
+          
       },
       {
         path: '/passwordChange',
@@ -88,7 +77,7 @@ const routes: Array<RouteConfig> = [
           import(
             /* webpackChunkName: "passswordChange" */ '@/views/PasswordChange.vue'
           ),
-        beforeEnter: ifAuthenticated
+        //beforeEnter: ifAuthenticated
       }
     ]
   }
@@ -99,5 +88,36 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+// запрет перехода на страницы пользователей для неавторизованных пользователей
+router.beforeResolve(async (to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    console.log('AFTER 1')
+    await userModule.actions.checkToken()
+    if (!userModule.state._isAuth) {
+      next('/auth')
+      return
+    }
+    next()
+  } else {
+    next()
+  }
+})
+
+// запрет перехода на страницы входа и регистрации для авторизованных пользователей
+router.beforeResolve(async (to, from, next) => {
+  if (to.matched.some(record => record.meta.guest)) {
+    console.log('AFTER 2')
+    await userModule.actions.checkToken()
+    if (userModule.state._isAuth) {
+      next('/profile')
+      return
+    }
+    next()
+  } else {
+    next()
+  }
+})
+
 
 export default router

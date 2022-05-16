@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import {
   Getters,
   Mutations,
@@ -5,244 +6,136 @@ import {
   Module,
   createMapper
 } from 'vuex-smart-module'
-import UserAPI, { UserRegister, UserLogin, UserRequest } from '@/api/user.ts'
-import _ from 'lodash'
-import VueRouter, { RouteConfig } from 'vue-router'
-import router from '@/router'
-import { http } from '@/api/httpAxios'
 
-interface UserLoginInfoI {
+import _ from 'lodash'
+import UserAPI, { UserRegister, UserLogin } from '@/api/user'
+
+interface UserInterface {
   username: string
-  id: string
-  access_token: string
-  role: string
+  role: any
+  created: any
+  id: null
 }
 
 class UserState {
-  userId = '' //'5fc35fb1f95de0304367d53d'
-  role = ''
-  username = ''
-  token: any = null
-  isAuthenticated = false
   userInfo = {
-    name: '',
-    surname: '',
-    type: '',
-    username: '',
-    customer: ''
+    username: 'unknown',
+    role: 0,
+    id: null,
+    created: null
   }
-  userReq = {
-    username: '',
-    role: ''
-  }
-  isAdmin = false
-  isBadAuth = false
-  isManager = false
+  _isAdmin = false
+  _isOperator = false
+  _isAuth = false
 }
+class UserGetters extends Getters<UserState> {}
 
-
-export class __user {
-  private _isAdmin: boolean = false
-  private _isOperator: boolean = false
-  private _isAuth: boolean = false
-  private _token: any = null
-  private _userInfo = {role:0, username: 'unknown'}
-  setUserInfo(userInfo: any) {
-    userInfo.username = userInfo.username
-    userInfo.role = userInfo.role
-    userInfo.created = userInfo.created
+export class UserMutations extends Mutations<UserState> {
+  SET_USER(payload: UserInterface) {
+    this.state.userInfo = payload
   }
-  clearToken() {
-    localStorage.removeItem('user-token')
-    this._isAuth = false
+  DELETE_USER() {
+    this.state.userInfo = <UserInterface>{}
   }
-  static getRole(role: any){
-    let payload = {isAdmin:false,isOperator:false}
-    switch(role){
-      case 2:
-        payload = {isAdmin:false,isOperator:true}
-      break;
-      case 4:
-        payload = {isAdmin:true,isOperator:true}
-      break;
-    }
-    return payload
-  }
-  constructor() {
-     
-  }
-    // get local item
-    getItem( tokenObj : UserRequest) {
-     
-        let tokenInfo = UserAPI.checkToken(this._token)
-        if (tokenInfo) {
-          const userInfo = JSON.parse(tokenInfo)
-          this.setUserInfo(userInfo)
-          this._isAuth = true
-          let result = __user.getRole(userInfo.role)
-          this._isAdmin = result.isAdmin // FIX
-          this._isOperator = result.isOperator
-        }else{ 
-      this.clearToken()}
-    }
-    // check token in local storage `
-    // if token is true, get info user / generate role / get avatar
-    // this._isAuth = true
-    // if token is not true -> this.clearToken()
-    // route -> redir /login
-  isAdmin(){
-    return this._isAdmin;
-  }
-  isOperator(){
-    return this._isOperator;
-  }
-  isAuth(){
-    return this._isAuth;
-  }
-  
-}
-
-class UserGetters extends Getters<UserState> {
-  // TODO
-}
-
-class UserMutations extends Mutations<UserState> {
-  // TODO
-  logOut() {
-    console.log('test logout')
-    localStorage.removeItem('user-token')
-    localStorage.removeItem('user-username')
-    this.state.isAuthenticated = false
-  }
-  setNewUserInfo(userInfo: UserLoginInfoI) {
-    this.state.userId = userInfo.id
-    this.state.username = userInfo.username
-    this.state.role = userInfo.role ?? 0
-    this.state.isAdmin = this.state.role === '4'
-    this.state.isManager = this.state.role === '2'
-    this.state.token = userInfo.access_token
-    localStorage.setItem('user-token', userInfo.access_token)
-    localStorage.setItem('user-username', userInfo.username)
-  }
-  getUserInfo() {
-    console.log(localStorage.getItem('user-username'))
-  }
-  setToken(token: any) {
-    this.state.token = token
-    localStorage.setItem('user-token', token)
-  }
-  setUserInfo(userInfo: any) {
-    this.state.userInfo.name = userInfo.name
-    this.state.userInfo.username = userInfo.username
-    this.state.userInfo.customer = userInfo.customer
-    this.state.userInfo.type = userInfo.type
-    this.state.userInfo.surname = userInfo.surname
-  }
-  setUserReq(userInfo: UserLoginInfoI) {
-    this.state.username = userInfo.username
-    this.state.userId = userInfo.id
-    this.state.role = userInfo.role
-    this.state.token = userInfo.access_token
+  SET_IS_AUTH(payload: boolean) {
+    this.state._isAuth = payload
   }
 }
-
-class UserActions extends Actions<
+export class UserActions extends Actions<
   UserState,
   UserGetters,
   UserMutations,
   UserActions
 > {
+  logOut() {
+    localStorage.removeItem('user-token')
+    this.state._isAuth = false
+  }
+  setToken(token: string) {
+    localStorage.setItem('user-token', token)
+    this.state._isAuth = true // FIX IT
+  }
+  setUserInfo(payload: UserInterface) {
+    this.commit('SET_USER', payload)
+    this.state._isAdmin = this.state.userInfo.role === 4
+    this.state._isOperator = this.state.userInfo.role === 2
+  }
+  setTheme(theme: string) {
+    localStorage.setItem('theme', theme)
+  }
+  getTheme() {
+    return localStorage.getItem('theme') === 'true' || false
+  }
+  getUserInfo() {
+    return this.state.userInfo
+  }
+  getIsOperator() {
+    return this.state._isOperator
+  }
+  getIsAdmin() {
+    return this.state._isAdmin
+  }
+  getIsAuth() {
+    return this.state._isAuth
+  }
   async fetchRegisterUser(registerObj: UserRegister) {
     try {
       const response = await UserAPI.register(registerObj)
-      console.log('test response: ', response.data)
-      if (response.data.ok) {
-        await this.actions.fetchLoginUser({
-          username: registerObj.username,
-          password: registerObj.password
-        })
+      if (response.ok) {
+        this.setToken(response.token)
+        // TODO SET USERDATA
+        this.state._isAuth = true
       }
     } catch (err) {
-      this.state.isAuthenticated = false
+      this.state._isAuth = false
       console.error(err)
     }
+  }
+  async fetchLoginUser(loginObj: UserLogin) {
+    let response
+    try {
+      if (!this.state._isAuth) {
+        response = await UserAPI.login(loginObj)
+        console.log("SLEEEEP:")
+        console.log(response)
+        if (!_.isEmpty(response.access_token) && !_.isEmpty(response.id)) {
+          this.setUserInfo(response)// FIX response.userInfo
+          this.state._isAuth = true
+          localStorage.setItem('user-token', response.access_token)
+          return {ok: true}
+        }
+      }
+    } catch (err) {
+      localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
+      this.state._isAuth = false
+      response = 'Email or password invalid'
+    }
+    return {ok: false, text: response}
+  }
+  async checkToken() {
+    await UserAPI.checkToken()
+    .then((user) => {
+      console.log(user)
+      //this.setUserInfo(response)
+      this.commit('SET_USER', user.userInfo)
+      this.state._isAuth = true
+    })
+    .catch(() => {
+      console.log('CATCH')
+      this.state._isAuth = false
+      localStorage.removeItem('user-token')
+    })
   }
   
-  async fetchLoginUser(loginObj: UserLogin) {
-    try {
-      if (!this.state.isAuthenticated) {
-        const isToken = !!localStorage.getItem('user-token')
-        this.state.isBadAuth = false
-        let response = null
-        if (isToken) {
-          response = await UserAPI.getUserByToken(loginObj)
-        } else {
-          response = await UserAPI.login(loginObj)
-        }
-        //const response = isToken ? await UserAPI.getUserByToken(loginObj) : await UserAPI.login(loginObj)
-        if (!_.isEmpty(response.data.accesstoken) && !.isEmpty(response.data.id)) {
-          this.mutations.setNewUserInfo(response.data)
-          console.log('test response.data: ', response.data, response.data.access_token)
-          if (!isToken) {
-            const token = localStorage.getItem('user-token')
-            if (token) {
-              http.defaults.headers.common['Authorization'] = 'Bearer ' + token
-            }
-          }
-          this.state.isAuthenticated = true
-        }
-      }
-    } catch (err) {
-      localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
-      this.state.isAuthenticated = false
-      if (err.response.status === 401) {
-        this.state.isBadAuth = true
-      } else {
-        console.error(err)
-      }
-    }
-  }
-  async fetchGetUser() {
-    try {
-      const response = await UserAPI.getUser(this.state.userId)
-      this.mutations.setUserInfo(response.data)
-    } catch (err) {
-      localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
-      this.state.isAuthenticated = !!localStorage.getItem('user-token')
-      console.error(err)
-    }
-  }
-  async getUserRequest() {
-    try {
-      const reqObj: any = {
-        username: localStorage.getItem('user-username'),
-        token: localStorage.getItem('user-token')
-      }
-      const response = await UserAPI.req(reqObj) //token+username
-      if (
-        !_.isEmpty(response.data.access_token) &&
-        !_.isEmpty(response.data.id)// FIX
-      ) {
-        this.mutations.setUserReq(response.data)        
-        this.state.isAuthenticated = true
-      }
-    } catch (err) {
-      localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
-      this.state.isAuthenticated = false
-      if (err.response.status === 401) {
-        this.state.isBadAuth = true
-      } else {
-        console.error(err)
-      }
-    }
-  }
 }
 
-export const user = new Module({
+const user = new Module({
   state: UserState,
   getters: UserGetters,
-  mutations: UserMutations,
-  actions: UserActions
+  actions: UserActions,
+  mutations: UserMutations
 })
-export const userMapper = createMapper(user)
 
+export default user
+
+export const userMapper = createMapper(user)

@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-sidebar id="main-sidebar" title="СайдБар" backdrop>
-      <div>Пользователь: {{ username }}</div>
+      <div>Пользователь: {{ userInfo.username }}</div>
       <button
         style="float: right; margin-right: 3px"
         type="button"
@@ -14,9 +14,9 @@
       <hr />
       <b-nav vertical class="py-1 px-1">
         <b-nav-item to="/books">Books</b-nav-item>
-        <b-nav-item to="/profile">Profile</b-nav-item>
-        <b-nav-item to="/Admin" v-if="role === 4">Admin(админ)</b-nav-item>
-        <b-nav-item to="/lorem" v-if="role !== 0"
+        <b-nav-item to="/profile" v-if="isAuth()">Profile</b-nav-item>
+        <b-nav-item to="/Admin" v-if="userInfo.role === 4">Admin(админ)</b-nav-item>
+        <b-nav-item to="/lorem" v-if="userInfo.role !== 0"
           >Модерация актов(админ, оператор)</b-nav-item
         >
       </b-nav>
@@ -28,36 +28,35 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { RouteConfigSingleView } from 'vue-router/types/router'
 import { userMapper } from '@/store/modules/user'
-import store from '@/store'
 import _ from 'lodash'
 
 const Mappers = Vue.extend({
   computed: {
-    ...userMapper.mapState(['role']),
-    ...userMapper.mapState(['username'])
+    ...userMapper.mapState(['userInfo','_isAuth'])
   },
   methods: {
-    ...userMapper.mapMutations(['logOut'])
+    ...userMapper.mapActions(['logOut'])
   }
 })
 
 @Component({ components: {} })
 export default class Sidebar extends Mappers {
+  
   logoutPage() {
     this.logOut()
     this.$router.push('/auth')
   }
   mounted() {
-    const usernames = localStorage.getItem('user-username')
-    if (usernames) {
-      this.username = usernames
-    }
+   let gg = true
+   if(!gg){
+     gg = false
+   }
+  }
+  isAuth(){
+    return this._isAuth
   }
   getUserInfo() {
-    const usernames = localStorage.getItem('user-username')
-    if (!_.isEmpty(usernames)) {
-      return usernames
-    }
+    return this.userInfo.username
   }
   private treeSidebar: { [k: string]: RouteConfigSingleView[] } = {}
 }

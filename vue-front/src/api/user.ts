@@ -18,7 +18,6 @@ export interface UserRequest {
   token: string
 }
 export interface PasswordChangeI {
-  username: string
   passwordOld: string
   password: string
   passwordConfirm: string
@@ -29,35 +28,28 @@ export default class UserAPI {
     const token = localStorage.getItem('user-token')
     let headers = {}
     if (token !== null && token.length === 32) {
-      headers =  { Authorization: 'Bearer ' + token }
+      headers = { Authorization: 'Bearer ' + token }
     }
-    const result = await http.post(`/${method}`, json, {headers})
-    if ('data' in result) {
-      return result
-      // parse code http FIXME
-    }
-    return false
+    return await http.post(`/${method}`, json, { headers }).then((response) => {
+      if (200 <= response.status && response.status < 300) {
+        return response.data
+      }
+      return Promise.reject(response.status)
+    })
   }
   public static register(json: UserRegister) {
-    // const data = new FormData()
-    // data.append('username', userInfo.username)
-    // data.append('psw', userInfo.password)
-    // return http.post(`/register`, data)
     return this.requestPost('register', json)
   }
   public static login(json: UserLogin) {
     return this.requestPost('login', json)
   }
-  public static checkToken(json: UserRequest) {
-    // const data = new FormData()
-    // data.append('username', userInfo.username)
-    // data.append('token', userInfo.token)
-    return this.requestPost(`/req`, json) // TODO
+  static async checkToken() {
+    return await this.requestPost(`validation`, {validation:true})
   }
   public static passChange(json: PasswordChangeI) {
     return this.requestPost('passChange', json)
   }
   public static profile() {
-    return this.requestPost(`/profile`, {})
+    return this.requestPost(`profile`, {})
   }
 }

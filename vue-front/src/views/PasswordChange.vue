@@ -80,11 +80,10 @@ import { strCheck } from '@/utils/fieldValidation'
 
 const Mapper = Vue.extend({
   computed: {
-    ...userMapper.mapState(['userInfo', 'username']),
+    ...userMapper.mapState(['userInfo']),
   },
   methods: {
-    ...userMapper.mapActions(['fetchRegisterUser']),
-    ...userMapper.mapMutations(['setNewUserInfo'])
+    ...userMapper.mapActions(['fetchRegisterUser','setUserInfo'])
   },
 })
 
@@ -94,7 +93,6 @@ const Mapper = Vue.extend({
 export default class PasswordChange extends Mapper {
   private allFill = false
   private authData: PasswordChangeI = {
-    username: this.username,
     passwordOld: '', //'test1@mail.ru',
     password: '', //'test'
     passwordConfirm: ''

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button v-b-toggle.main-sidebar class="sidebar-button" v-if="isAuthenticated">
+    <b-button v-b-toggle.main-sidebar class="sidebar-button" v-if="_isAuth">
       <font-awesome-icon :icon="['fas', 'bars']" />
     </b-button>
     <Sidebar />
@@ -17,7 +17,7 @@ import {userMapper} from "@/store/modules/user";
 
 const Mappers = Vue.extend({
   computed: {
-    ...userMapper.mapState(['isAuthenticated'])
+    ...userMapper.mapState(['_isAuth'])
   }
 })
 
@@ -27,6 +27,9 @@ const Mappers = Vue.extend({
   }
 })
 export default class Home extends Mappers {
+  getAuth(){
+    return this._isAuth
+  }
   mounted() {
 
     //this.$router.push('/')
