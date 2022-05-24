@@ -1,8 +1,9 @@
 import sqlite3
 import os
-
-import flask
-from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, make_response
+import re
+from os import walk
+import platform
+from flask import Flask, render_template, request, g,jsonify, flash, abort, redirect, url_for, make_response
 from sqlalchemy.dialects.sqlite import json
 from random import choice
 from string import ascii_uppercase
@@ -34,6 +35,16 @@ app.config['MYSQL_USER'] = 'jwt_test'
 app.config['MYSQL_PASSWORD'] = 'GWtJ310XJwinmvzZ'
 app.config['MYSQL_DB'] = 'jwt_base'
 
+concat_slash = '/'
+if platform.system() == 'Windows':
+    concat_slash = '\\'
+
+
+app.config['NEURO_PATH'] = './photo/'
+
+# apt install imagemagick
+# convert $file -resize 256x256 $new_name
+
 
 dbase = FDataBase(app)
 
@@ -48,6 +59,7 @@ login_manager.login_message_category = "success"
 CORS(app)
 
 def generate_token():
+    # hash = sha256_crypt.hash("rand")
     return ''.join(choice(ascii_uppercase) for i in range(32))
 
 @login_manager.user_loader
@@ -136,6 +148,25 @@ def addPost():
             flash('Ошибка добавления статьи', category='error')
 
     return render_template('add_post.html', menu=dbase.getMenu(), title="Добавление статьи")
+
+
+@app.route("/view_folder", methods=["POST"])
+def view_folder():
+    if 'folder' in request.json:
+        folder = request.json['folder']
+    else:
+        folder = '/'
+    fullpath = app.config['NEURO_PATH'] + folder
+    dirs = list()
+    for (dirpath, dirnames, filenames) in walk(fullpath):
+        for name in filenames:
+            # FIXME filter only [] extensions. example ['png','jpg']
+            dirs.append({'type':"file",'name':name})
+        for name in dirnames:
+            dirs.append({'type':"dir",'name':name})
+        break
+    return jsonify({"data": dirs, "dir": folder}),200
+
 
 
 @app.route("/post/<alias>")
