@@ -4,6 +4,10 @@
     <button type="button" class="btn btn-success btn-sm" @click="passChange">
       Сменить пароль
     </button>
+    <button type="button" class="btn btn-success btn-sm" @click="File">
+      Покажи файлы 
+    </button>
+    <div>Пользователь: {{ userInfo.username }}</div>
     <br />
     <hr />
     <PasswordChange />
@@ -13,6 +17,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import PasswordChange from '@/views/PasswordChange.vue'
 //import { RouteConfigSingleView } from 'vue-router/types/router'
+
 import { userMapper } from '@/store/modules/user'
 import _ from 'lodash'
 
@@ -28,6 +33,7 @@ const Mappers = Vue.extend({
 
 export default class Profile extends Mappers {
   private allFill = false
+  
   private passChange() {
     this.$bvModal.show('passwordModal')
   }
