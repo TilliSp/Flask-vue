@@ -37,3 +37,38 @@ def check(var):
 r = check('========================================1fdgdfh-=-=-=')
 print(r)
 
+
+@app.route("/login", methods=["POST"])
+def login():
+    if 'username' in request.json and 'password' in request.json:
+        user_data = request.json
+        print("INPUT DATA ", user_data)
+        user = dbase.getUserByUsername(user_data['username'])
+        print("PSW DATA ", user)
+        if user and check_password_hash(user['psw'], user_data['password']):
+            print("test  here user TYPE", type(user['username']))
+
+            flash("Неверная пара логин/пароль", "error")
+
+            print("test  after log user: ", user['id'])
+
+            access_token = generate_token()
+            print(access_token)
+            print(type(access_token))
+            dbase.saveToken(access_token,user['id'])
+
+            return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
+                user['username'])}, 200
+        return {"error": 'Email or password invalid'}, 401
+    return {"error": 'cannot found required fields'}, 401
+
+
+async def create_user_token(user_id: int):
+    """ Создает токен для пользователя с указанным user_id """
+    query = (
+        tokens_table.insert()
+        .values(expires=datetime.now() + timedelta(weeks=2), user_id=user_id)
+        .returning(tokens_table.c.token, tokens_table.c.expires)
+    )
+
+    return await database.fetch_one(query)

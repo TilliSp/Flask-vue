@@ -22,6 +22,7 @@ DATABASE = '/tmp/flsite.db'
 DEBUG = True
 SECRET_KEY = 'fdgfh78@#5?>gfhf89dx,v06k'
 MAX_CONTENT_LENGTH = 1024 * 1024
+wait_timeout = 300
 
 
 app = Flask(__name__)
@@ -58,7 +59,7 @@ login_manager.login_message = "Авторизуйтесь для доступа 
 login_manager.login_message_category = "success"
 CORS(app)
 
-def generate_token():
+def generate_token() -> object:
     # hash = sha256_crypt.hash("rand")
     return ''.join(choice(ascii_uppercase) for i in range(32))
 
@@ -161,7 +162,12 @@ def view_folder():
     for (dirpath, dirnames, filenames) in walk(fullpath):
         for name in filenames:
             # FIXME filter only [] extensions. example ['png','jpg']
-            dirs.append({'type':"file",'name':name})
+            # print('fullpath', fullpath)
+            # print('dirpath',dirpath,'dirnames', dirnames, 'filenames',filenames[1])
+            # ext = os.path.splitext(filenames[0])
+            # print('ext', ext)
+            # if ext == "jpg":
+            dirs.append({'type': "file", 'name': name})
         for name in dirnames:
             dirs.append({'type':"dir",'name':name})
         break
@@ -183,47 +189,30 @@ def showPost(alias):
 def login():
     if 'username' in request.json and 'password' in request.json:
         user_data = request.json
-        print("INPUT DATA ", user_data)
         user = dbase.getUserByUsername(user_data['username'])
-        print("PSW DATA ", user)
         if user and check_password_hash(user['psw'], user_data['password']):
-            print("test  here user TYPE", type(user['username']))
-
             flash("Неверная пара логин/пароль", "error")
-
-            print("test  after log user: ", user['id'])
-
             access_token = generate_token()
-            print(access_token)
-            print(type(access_token))
             dbase.saveToken(access_token,user['id'])
-
             return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
                 user['username'])}, 200
-        return {"error": 'Email or password invalid'}, 401
-    return {"error": 'cannot found required fields'}, 401
+        return {"error": 'Login or password invalid'}, 401
+    return {"error": 'cannot found required fields'}, 403
 
 
 @app.route("/register", methods=["POST"])
 def register():
-    # form = RegisterForm()
     if 'username' in request.json and 'password' in request.json:
         user_data = request.json
-        # formEmail = request.form['username']
-        # formPassword = request.form['psw']
-        # if form.validate_on_submit():test log
-        # print("test log register", user_data['username'], user_data['password'])
         hash = generate_password_hash(user_data['password'])
-        #print("test log register hash ", hash)
         res = dbase.addUser(user_data['username'], hash)
-        # print("test log res", res)
         if res:
             flash("Вы успешно зарегистрированы", "success")
             return {"ok": True}, 200
         else:
             flash("Ошибка при добавлении в БД", "error")
 
-        return {"error": 'Email or password invalid'}, 401
+        return {"error": 'Login or password invalid'}, 401
 
 
 @app.route("/passChange", methods=["POST", "GET"])
