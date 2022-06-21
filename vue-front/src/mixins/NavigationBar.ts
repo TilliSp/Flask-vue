@@ -13,21 +13,20 @@ export default class NavigationMixin extends Vue {
     {
       text: 'Search',
       icon: 'clipboard-text-search',
-      link: '/search',
+      link: '/search'
     },
     { text: 'Applications', icon: 'bell', link: '/applications' },
     { text: 'Projects', icon: 'account-tie-voice', link: '/ownprojects' },
     {
       text: 'Participation',
       icon: 'account-eye',
-      link: '/participantprojects',
-    },
+      link: '/participantprojects'
+    }
   ]
 
   public async logout(): Promise<void> {
     await userModule.actions.logOut().then(() => {
-        this.$router.push('/')
+      this.$router.push('/')
     })
   }
-
 }

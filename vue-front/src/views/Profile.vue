@@ -5,7 +5,7 @@
       Сменить пароль
     </button>
     <button type="button" class="btn btn-success btn-sm" @click="File">
-      Покажи файлы 
+      Покажи файлы
     </button>
     <div>Пользователь: {{ userInfo.username }}</div>
     <br />
@@ -19,21 +19,19 @@ import PasswordChange from '@/views/PasswordChange.vue'
 //import { RouteConfigSingleView } from 'vue-router/types/router'
 
 import { userMapper } from '@/store/modules/user'
-import _ from 'lodash'
 
 const Mappers = Vue.extend({
   computed: {
-     ...userMapper.mapState(['userInfo'])
+    ...userMapper.mapState(['userInfo'])
   }
 })
 
-@Component({ 
-    components: {   PasswordChange  } 
+@Component({
+  components: { PasswordChange }
 })
-
 export default class Profile extends Mappers {
   private allFill = false
-  
+
   private passChange() {
     this.$bvModal.show('passwordModal')
   }

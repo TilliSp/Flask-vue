@@ -7,7 +7,6 @@ import {
   createMapper
 } from 'vuex-smart-module'
 
-import _ from 'lodash'
 import UserAPI, { UserRegister, UserLogin } from '@/api/user'
 
 interface UserInterface {
@@ -96,13 +95,16 @@ export class UserActions extends Actions<
     try {
       if (!this.state._isAuth) {
         response = await UserAPI.login(loginObj)
-        console.log("SLEEEEP:")
+        console.log('SLEEEEP:')
         console.log(response)
-        if (!_.isEmpty(response.access_token) && !_.isEmpty(response.id)) {
-          this.setUserInfo(response)// FIX response.userInfo
+        if (
+          Object.keys(response.access_token).length !== 0 &&
+          Object.keys(response.id).length !== 0
+        ) {
+          this.setUserInfo(response) // FIX response.userInfo
           this.state._isAuth = true
           localStorage.setItem('user-token', response.access_token)
-          return {ok: true}
+          return { ok: true }
         }
       }
     } catch (err) {
@@ -110,23 +112,22 @@ export class UserActions extends Actions<
       this.state._isAuth = false
       response = 'Email or password invalid'
     }
-    return {ok: false, text: response}
+    return { ok: false, text: response }
   }
   async checkToken() {
     await UserAPI.checkToken()
-    .then((user) => {
-      console.log(user)
-      //this.setUserInfo(response)
-      this.commit('SET_USER', user.userInfo)
-      this.state._isAuth = true
-    })
-    .catch(() => {
-      console.log('CATCH')
-      this.state._isAuth = false
-      localStorage.removeItem('user-token')
-    })
+      .then(user => {
+        console.log(user)
+        //this.setUserInfo(response)
+        this.commit('SET_USER', user.userInfo)
+        this.state._isAuth = true
+      })
+      .catch(() => {
+        console.log('CATCH')
+        this.state._isAuth = false
+        localStorage.removeItem('user-token')
+      })
   }
-  
 }
 
 const user = new Module({

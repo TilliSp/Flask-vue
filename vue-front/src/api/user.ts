@@ -30,7 +30,7 @@ export default class UserAPI {
     if (token !== null && token.length === 32) {
       headers = { Authorization: 'Bearer ' + token }
     }
-    return await http.post(`/${method}`, json, { headers }).then((response) => {
+    return await http.post(`/${method}`, json, { headers }).then(response => {
       if (200 <= response.status && response.status < 300) {
         return response.data
       }
@@ -44,7 +44,7 @@ export default class UserAPI {
     return this.requestPost('login', json)
   }
   static async checkToken() {
-    return await this.requestPost(`validation`, {validation:true})
+    return await this.requestPost(`validation`, { validation: true })
   }
   public static passChange(json: PasswordChangeI) {
     return this.requestPost('passChange', json)

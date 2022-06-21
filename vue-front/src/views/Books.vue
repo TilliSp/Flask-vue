@@ -4,17 +4,30 @@
       <div class="col-sm-10">
         <h1>Пользователи</h1>
         <button
-            style="float:right;"
-            type="button"
-            class="btn btn-success btn-sm"
-            @click="logoutPage"
+          style="float:right;"
+          type="button"
+          class="btn btn-success btn-sm"
+          @click="logoutPage"
         >
           Logout
         </button>
 
-        <button style="display: none;" type="button" class="btn btn-success btn-sm" v-b-modal.book-modal>Add Book</button>
-        <button style="margin-left: 0px;margin-right: 0px" type="button" class="btn btn-success btn-sm" >Показать пользователей</button>
-        <br><br>
+        <button
+          style="display: none;"
+          type="button"
+          class="btn btn-success btn-sm"
+          v-b-modal.book-modal
+        >
+          Add Book
+        </button>
+        <button
+          style="margin-left: 0px;margin-right: 0px"
+          type="button"
+          class="btn btn-success btn-sm"
+        >
+          Показать пользователей
+        </button>
+        <br /><br />
         <table class="table table-hover">
           <thead>
             <tr>
@@ -35,17 +48,19 @@
               <td>
                 <div class="btn-group" role="group">
                   <button
-                          type="button"
-                          class="btn btn-warning btn-sm"
-                          v-b-modal.book-update-modal
-                          @click="editBook(book)">
-                      Update
+                    type="button"
+                    class="btn btn-warning btn-sm"
+                    v-b-modal.book-update-modal
+                    @click="editBook(book)"
+                  >
+                    Update
                   </button>
                   <button
-                          type="button"
-                          class="btn btn-danger btn-sm"
-                          @click="onDeleteBook(book)">
-                      Delete
+                    type="button"
+                    class="btn btn-danger btn-sm"
+                    @click="onDeleteBook(book)"
+                  >
+                    Delete
                   </button>
                 </div>
               </td>
@@ -54,31 +69,41 @@
         </table>
       </div>
     </div>
-    <b-modal ref="addBookModal"
-            id="book-modal"
-            title="Add a new book"
-            hide-footer>
+    <b-modal
+      ref="addBookModal"
+      id="book-modal"
+      title="Add a new book"
+      hide-footer
+    >
       <b-form @submit="onSubmit" @reset="onReset" class="w-100">
-      <b-form-group id="form-title-group"
-                    label="Title:"
-                    label-for="form-title-input">
-          <b-form-input id="form-title-input"
-                        type="text"
-                        v-model="addBookForm.title"
-                        required
-                        placeholder="Enter title">
+        <b-form-group
+          id="form-title-group"
+          label="Title:"
+          label-for="form-title-input"
+        >
+          <b-form-input
+            id="form-title-input"
+            type="text"
+            v-model="addBookForm.title"
+            required
+            placeholder="Enter title"
+          >
           </b-form-input>
         </b-form-group>
-        <b-form-group id="form-author-group"
-                      label="Author:"
-                      label-for="form-author-input">
-            <b-form-input id="form-author-input"
-                          type="text"
-                          v-model="addBookForm.author"
-                          required
-                          placeholder="Enter author">
-            </b-form-input>
-          </b-form-group>
+        <b-form-group
+          id="form-author-group"
+          label="Author:"
+          label-for="form-author-input"
+        >
+          <b-form-input
+            id="form-author-input"
+            type="text"
+            v-model="addBookForm.author"
+            required
+            placeholder="Enter author"
+          >
+          </b-form-input>
+        </b-form-group>
         <b-form-group id="form-read-group">
           <b-form-checkbox-group v-model="addBookForm.read" id="form-checks">
             <b-form-checkbox value="true">Read?</b-form-checkbox>
@@ -90,31 +115,41 @@
         </b-button-group>
       </b-form>
     </b-modal>
-    <b-modal ref="editBookModal"
-            id="book-update-modal"
-            title="Update"
-            hide-footer>
+    <b-modal
+      ref="editBookModal"
+      id="book-update-modal"
+      title="Update"
+      hide-footer
+    >
       <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
-      <b-form-group id="form-title-edit-group"
-                    label="Title:"
-                    label-for="form-title-edit-input">
-          <b-form-input id="form-title-edit-input"
-                        type="text"
-                        v-model="editForm.title"
-                        required
-                        placeholder="Enter title">
+        <b-form-group
+          id="form-title-edit-group"
+          label="Title:"
+          label-for="form-title-edit-input"
+        >
+          <b-form-input
+            id="form-title-edit-input"
+            type="text"
+            v-model="editForm.title"
+            required
+            placeholder="Enter title"
+          >
           </b-form-input>
         </b-form-group>
-        <b-form-group id="form-author-edit-group"
-                      label="Author:"
-                      label-for="form-author-edit-input">
-            <b-form-input id="form-author-edit-input"
-                          type="text"
-                          v-model="editForm.author"
-                          required
-                          placeholder="Enter author">
-            </b-form-input>
-          </b-form-group>
+        <b-form-group
+          id="form-author-edit-group"
+          label="Author:"
+          label-for="form-author-edit-input"
+        >
+          <b-form-input
+            id="form-author-edit-input"
+            type="text"
+            v-model="editForm.author"
+            required
+            placeholder="Enter author"
+          >
+          </b-form-input>
+        </b-form-group>
         <b-form-group id="form-read-edit-group">
           <b-form-checkbox-group v-model="editForm.read" id="form-checks">
             <b-form-checkbox value="true">Read?</b-form-checkbox>
@@ -139,7 +174,7 @@ export default {
       addBookForm: {
         title: '',
         author: '',
-        read: [],
+        read: []
       },
       message: '',
       showMessage: false,
@@ -147,9 +182,9 @@ export default {
         id: '',
         title: '',
         author: '',
-        read: [],
-      },
-    };
+        read: []
+      }
+    }
   },
   methods: {
     getBooks() {
@@ -183,46 +218,46 @@ export default {
       //   });
     },
     initForm() {
-      this.addBookForm.title = '';
-      this.addBookForm.author = '';
-      this.addBookForm.read = [];
-      this.editForm.id = '';
-      this.editForm.title = '';
-      this.editForm.author = '';
-      this.editForm.read = [];
+      this.addBookForm.title = ''
+      this.addBookForm.author = ''
+      this.addBookForm.read = []
+      this.editForm.id = ''
+      this.editForm.title = ''
+      this.editForm.author = ''
+      this.editForm.read = []
     },
     onSubmit(evt) {
-      evt.preventDefault();
-      this.$refs.addBookModal.hide();
-      let read = false;
-      if (this.addBookForm.read[0]) read = true;
+      evt.preventDefault()
+      this.$refs.addBookModal.hide()
+      let read = false
+      if (this.addBookForm.read[0]) read = true
       const payload = {
         title: this.addBookForm.title,
         author: this.addBookForm.author,
-        read, // property shorthand
-      };
-      this.addBook(payload);
-      this.initForm();
+        read // property shorthand
+      }
+      this.addBook(payload)
+      this.initForm()
     },
     onReset(evt) {
-      evt.preventDefault();
-      this.$refs.addBookModal.hide();
-      this.initForm();
+      evt.preventDefault()
+      this.$refs.addBookModal.hide()
+      this.initForm()
     },
     editBook(book) {
-      this.editForm = book;
+      this.editForm = book
     },
     onSubmitUpdate(evt) {
-      evt.preventDefault();
-      this.$refs.editBookModal.hide();
-      let read = false;
-      if (this.editForm.read[0]) read = true;
+      evt.preventDefault()
+      this.$refs.editBookModal.hide()
+      let read = false
+      if (this.editForm.read[0]) read = true
       const payload = {
         title: this.editForm.title,
         author: this.editForm.author,
-        read,
-      };
-      this.updateBook(payload, this.editForm.id);
+        read
+      }
+      this.updateBook(payload, this.editForm.id)
     },
     updateBook(payload, bookID) {
       // const path = `http://localhost:5000/books/${bookID}`;
@@ -239,13 +274,13 @@ export default {
       //   });
     },
     onResetUpdate(evt) {
-      evt.preventDefault();
-      this.$refs.editBookModal.hide();
-      this.initForm();
-      this.getBooks(); // why?
+      evt.preventDefault()
+      this.$refs.editBookModal.hide()
+      this.initForm()
+      this.getBooks() // why?
     },
     removeBook(bookID) {
-      const path = `http://localhost:5000/books/${bookID}`;
+      const path = `http://localhost:5000/books/${bookID}`
       // axios.delete(path)
       //   .then(() => {
       //     this.getBooks();
@@ -259,12 +294,11 @@ export default {
       //   });
     },
     onDeleteBook(book) {
-      this.removeBook(book.id);
-    },
+      this.removeBook(book.id)
+    }
   },
   created() {
-    this.getBooks();
-  },
-};
-
+    this.getBooks()
+  }
+}
 </script>

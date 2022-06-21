@@ -4,8 +4,9 @@
     class="sidenav d-flex flex-column flex-shrink-0 text-black widthSide"
     style="height: 100vh; align-items: stretch"
   >
-   
-    <span class="fs-4 text-center text-white" style="padding-left: 40px">Sidebar</span>
+    <span class="fs-4 text-center text-white" style="padding-left: 40px"
+      >Sidebar</span
+    >
 
     <hr />
     <ul
@@ -67,20 +68,19 @@
   </div>
 </template>
 <style lang="scss" scoped>
-li:hover{
-   background-color: #16205c;
+li:hover {
+  background-color: #16205c;
 }
 .sidenav {
-    background-color: #0c1844;
+  background-color: #0c1844;
   height: 100%;
   width: 0%;
   z-index: 1;
   top: 0;
   left: 0;
   overflow-x: hidden;
-  transition: 0.5s;      
+  transition: 0.5s;
   position: fixed;
-
 }
 
 .sidenav a {
@@ -89,7 +89,7 @@ li:hover{
   text-align: center;
   font-size: 25px;
   display: block;
-  transition: 0.3s;  
+  transition: 0.3s;
 }
 
 .sidenav a:hover {
@@ -103,7 +103,7 @@ li:hover{
   font-size: 36px;
   margin-left: 50px;
   border: none;
-  
+
   opacity: 1;
 }
 
@@ -120,33 +120,31 @@ li:hover{
   .widthSide {
     width: 100% !important;
     min-height: 100%;
-    
   }
-  .sidenav a{
-      font-size: 8em !important;
+  .sidenav a {
+    font-size: 8em !important;
   }
 }
 @media screen and (min-width: 720px) {
-    .widthSide {
-      width: 15% !important;
-    }
-    .widthSide ul {
-      justify-content: start !important;
-    }
+  .widthSide {
+    width: 15% !important;
   }
+  .widthSide ul {
+    justify-content: start !important;
+  }
+}
 
 @media screen and (max-height: 450px) {
-
-  .sidenav {}
+  .sidenav {
+  }
 
   .sidenav a {
     font-size: 18px;
   }
 }
-.card_style{
-    background-color: #16205c;
+.card_style {
+  background-color: #16205c;
 }
-
 
 .widthSide {
   width: 15%;

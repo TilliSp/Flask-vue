@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '@/views/Home.vue'
 import store from '../store'
-import _ from 'lodash'
 import { userMapper } from '@/store/modules/user'
 import { userModule } from '@/store'
 
@@ -39,27 +38,29 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: '/auth',
-        name: 'MainPage',
+        name: 'Auth',
         component: () =>
-          import(/* webpackChunkName: "main" */ '@/views/MainPage.vue'),
+          import(/* webpackChunkName: "main" */ '@/views/Auth.vue')
       },
       {
         path: '/books',
         name: 'Books',
         component: () =>
-          import(/* webpackChunkName: "books" */ '@/views/Books.vue'),
+          import(/* webpackChunkName: "books" */ '@/views/Books.vue')
       },
       {
         path: '/registration',
         name: 'Registration',
         component: () =>
-          import(/* webpackChunkName: "registration" */ '@/views/Registration.vue')
+          import(
+            /* webpackChunkName: "registration" */ '@/views/Registration.vue'
+          )
       },
       {
         path: '/test',
         name: 'Test',
         component: () =>
-          import(/* webpackChunkName: "test" */ '@/views/Test.vue'),
+          import(/* webpackChunkName: "test" */ '@/views/Test.vue')
         //beforeEnter: ifAuthenticated
       },
       {
@@ -67,8 +68,7 @@ const routes: Array<RouteConfig> = [
         name: 'Profile',
         meta: { requiresAuth: true },
         component: () =>
-          import(/* webpackChunkName: "profile" */ '@/views/Profile.vue'),
-          
+          import(/* webpackChunkName: "profile" */ '@/views/Profile.vue')
       },
       {
         path: '/passwordChange',
@@ -76,7 +76,7 @@ const routes: Array<RouteConfig> = [
         component: () =>
           import(
             /* webpackChunkName: "passswordChange" */ '@/views/PasswordChange.vue'
-          ),
+          )
         //beforeEnter: ifAuthenticated
       }
     ]
@@ -118,6 +118,5 @@ router.beforeResolve(async (to, from, next) => {
     next()
   }
 })
-
 
 export default router

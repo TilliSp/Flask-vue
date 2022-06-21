@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <div class="authCard">
       <div style="
       text-align: center;
@@ -58,6 +58,63 @@
       <br />
     </div>
     <Registration />
+  </div> -->
+  <div class="auth-wrapper auth-v1">
+    <div class="auth-inner">
+      <v-card class="auth-card">
+        <v-card-title class="d-flex align-center justify-center py-7">
+          <h2 class="text-2xl font-weight-semibold">Авторизация</h2>
+        </v-card-title>
+
+        <v-card-text>
+          <p class="text-2xl font-weight-semibold text--primary text-center">
+            Введите логин и пароль
+          </p>
+        </v-card-text>
+
+        <v-card-text>
+          <v-form>
+            <v-text-field
+              type="text"
+              v-model="authData.login"
+              :state="!!authData.login && strCheckPage(authData.login)"
+              outlined
+              label="Логин"
+              placeholder="IVAN"
+              hide-details
+              class="mb-3"
+              trim
+            ></v-text-field>
+
+            <v-text-field
+              v-model="authData.password"
+              :state="
+                !!authData.password.length && strCheckPage(authData.password)
+              "
+              outlined
+              :type="isPasswordVisible ? 'text' : 'password'"
+              label="Пароль"
+              placeholder="············"
+              :append-icon="
+                isPasswordVisible ? icons.mdiEyeOffOutline : icons.mdiEyeOutline
+              "
+              hide-details
+              trim
+              @click:append="isPasswordVisible = !isPasswordVisible"
+            ></v-text-field>
+            <v-btn block color="primary" class="mt-6" @click="loginClick()">
+              Войти
+            </v-btn>
+          </v-form>
+        </v-card-text>
+
+        <v-card-text class="d-flex align-center justify-center flex-wrap mt-2">
+          <router-link :to="{ name: 'Registration' }">
+            Перейти к регистрации
+          </router-link>
+        </v-card-text>
+      </v-card>
+    </div>
   </div>
 </template>
 
@@ -65,10 +122,9 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Registration from '@/views/Registration.vue'
 //import { checkEmail } from '@/utils/fieldValidation'
-import UserAPI from "@/api/user";
 import { userMapper } from '@/store/modules/user'
-import {strCheck} from "@/utils/fieldValidation";
-
+import { strCheck } from '@/utils/fieldValidation'
+import { mdiEyeOutline, mdiEyeOffOutline } from '@mdi/js'
 const Mapper = Vue.extend({
   computed: {
     ...userMapper.mapState(['userInfo'])
@@ -82,13 +138,18 @@ const Mapper = Vue.extend({
   components: { Registration }
 })
 export default class Auth extends Mapper {
+  isPasswordVisible = false
   private allFill = false
-  private authData = {
+  authData = {
     login: '', //'test1@mail.ru',
     password: '' //'test'
   }
+  icons = {
+    mdiEyeOutline,
+    mdiEyeOffOutline
+  }
 
-  private strCheckPage(value: string) {
+  strCheckPage(value: string) {
     return strCheck(value)
   }
 
@@ -113,10 +174,10 @@ export default class Auth extends Mapper {
     }
     // await UserAPI.login(objReq)
     // this.userInfo.username = this.authData.login
-    const data =await this.fetchLoginUser(objReq)
-    if(data.ok){
+    const data = await this.fetchLoginUser(objReq)
+    if (data.ok) {
       this.$router.push('/profile')
-    }else{ 
+    } else {
       // toastr message - unknown user or password
       console.log(data)
     }
@@ -124,57 +185,6 @@ export default class Auth extends Mapper {
 }
 </script>
 
-<style lang="scss" scoped>
-.authCard {
-  margin-top: 30px;
-/*  border: solid black 1px;*/
-  width: 40%;
-  margin-left: 30%;
-  margin-right: 30%;
-  /*background: black;*/
-}
-.authButton {
-  width: 20%;
-  margin-left: 35%;
-  margin-right: 40%;
-}
-.authLink {
-  width: 15%;
-  margin-left: 45%;
-}
-.authInputElem {
-  border:0;
-  background: none;
-  display: block;
-  margin: 20px auto;
-  text-align: center;
-  border: 2px solid #3498db;
-  padding: 14px 10px;
-  width: 455px;
-  outline: none;
-  color: black;
-  border-radius: 24px;
-  transition: 0.25s;
-}
-.authInputElem:focus {
-  width: 280px;
-  border-color: #192bb1;
-}
-.authInputButton {
-  border:0;
-  background: none;
-  display: block;
-  margin: 20px auto;
-  text-align: center;
-  border: 2px solid #192bb1;
-  padding: 14px 40px;
-  outline: none;
-  color: black;
-  border-radius: 24px;
-  transition: 0.25s;
-  cursor: pointer;
-}
-.authInputButton:hover {
-  background: #192bb1;
-}
+<style lang="scss">
+@import '~@/plugins/vuetify/default-preset/preset/pages/auth.scss';
 </style>

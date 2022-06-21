@@ -15,7 +15,9 @@
       <b-nav vertical class="py-1 px-1">
         <b-nav-item to="/books">Books</b-nav-item>
         <b-nav-item to="/profile" v-if="isAuth()">Profile</b-nav-item>
-        <b-nav-item to="/Admin" v-if="userInfo.role === 4">Admin(админ)</b-nav-item>
+        <b-nav-item to="/Admin" v-if="userInfo.role === 4"
+          >Admin(админ)</b-nav-item
+        >
         <b-nav-item to="/lorem" v-if="userInfo.role !== 0"
           >Модерация актов(админ, оператор)</b-nav-item
         >
@@ -28,11 +30,10 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { RouteConfigSingleView } from 'vue-router/types/router'
 import { userMapper } from '@/store/modules/user'
-import _ from 'lodash'
 
 const Mappers = Vue.extend({
   computed: {
-    ...userMapper.mapState(['userInfo','_isAuth'])
+    ...userMapper.mapState(['userInfo', '_isAuth'])
   },
   methods: {
     ...userMapper.mapActions(['logOut'])
@@ -41,18 +42,17 @@ const Mappers = Vue.extend({
 
 @Component({ components: {} })
 export default class Sidebar extends Mappers {
-  
   logoutPage() {
     this.logOut()
     this.$router.push('/auth')
   }
   mounted() {
-   let gg = true
-   if(!gg){
-     gg = false
-   }
+    let gg = true
+    if (!gg) {
+      gg = false
+    }
   }
-  isAuth(){
+  isAuth() {
     return this._isAuth
   }
   getUserInfo() {

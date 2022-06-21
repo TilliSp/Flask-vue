@@ -80,15 +80,15 @@ import { strCheck } from '@/utils/fieldValidation'
 
 const Mapper = Vue.extend({
   computed: {
-    ...userMapper.mapState(['userInfo']),
+    ...userMapper.mapState(['userInfo'])
   },
   methods: {
-    ...userMapper.mapActions(['fetchRegisterUser','setUserInfo'])
-  },
+    ...userMapper.mapActions(['fetchRegisterUser', 'setUserInfo'])
+  }
 })
 
 @Component({
-  components: {},
+  components: {}
 })
 export default class PasswordChange extends Mapper {
   private allFill = false

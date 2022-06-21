@@ -13,7 +13,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import Sidebar from '@/components/ui/Sidebar.vue'
-import {userMapper} from "@/store/modules/user";
+import { userMapper } from '@/store/modules/user'
 
 const Mappers = Vue.extend({
   computed: {
@@ -27,11 +27,10 @@ const Mappers = Vue.extend({
   }
 })
 export default class Home extends Mappers {
-  getAuth(){
+  getAuth() {
     return this._isAuth
   }
   mounted() {
-
     //this.$router.push('/')
   }
 }
