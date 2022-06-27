@@ -217,14 +217,14 @@ export default class Registration extends Mapper {
   // private checkEmail() {
   //   return checkEmail(this.authData.login)
   // }
-  private strCheckPage(value: string) {
+  strCheckPage(value: string) {
     return strCheck(value)
   }
 
   async created() {
     this?.onChangeField()
   }
-  private onChangeField() {
+  onChangeField() {
     this.allFill =
       this.authData.login !== '' &&
       this.authData.password !== '' &&
@@ -233,7 +233,7 @@ export default class Registration extends Mapper {
       strCheck(this.authData.password)
   }
 
-  private confirmPassword() {
+  confirmPassword() {
     return (
       this.authData.passwordConfirm !== '' &&
       this.authData.passwordConfirm !== this.authData.password

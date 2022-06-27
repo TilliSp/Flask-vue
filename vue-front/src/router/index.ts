@@ -43,10 +43,10 @@ const routes: Array<RouteConfig> = [
           import(/* webpackChunkName: "main" */ '@/views/Auth.vue')
       },
       {
-        path: '/books',
-        name: 'Books',
+        path: '/dashboard',
+        name: 'dashboard',
         component: () =>
-          import(/* webpackChunkName: "books" */ '@/views/Books.vue')
+          import(/* webpackChunkName: "books" */ '@/views/Dashboard.vue')
       },
       {
         path: '/registration',
@@ -69,6 +69,12 @@ const routes: Array<RouteConfig> = [
         meta: { requiresAuth: true },
         component: () =>
           import(/* webpackChunkName: "profile" */ '@/views/Profile.vue')
+      },
+      {
+        path: '/actGenerate',
+        name: 'ActGenerate',
+        component: () =>
+          import(/* webpackChunkName: "profile" */ '@/views/ActGenerate.vue')
       },
       {
         path: '/passwordChange',

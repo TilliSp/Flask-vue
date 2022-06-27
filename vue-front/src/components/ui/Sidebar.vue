@@ -12,8 +12,9 @@
       </button>
       <br />
       <hr />
-      <b-nav vertical class="py-1 px-1">
+      <v-list vertical class="py-1 px-1">
         <b-nav-item to="/books">Books</b-nav-item>
+        <b-nav-item to="/actGenerate">Act</b-nav-item>
         <b-nav-item to="/profile" v-if="isAuth()">Profile</b-nav-item>
         <b-nav-item to="/Admin" v-if="userInfo.role === 4"
           >Admin(админ)</b-nav-item
@@ -21,7 +22,7 @@
         <b-nav-item to="/lorem" v-if="userInfo.role !== 0"
           >Модерация актов(админ, оператор)</b-nav-item
         >
-      </b-nav>
+      </v-list>
     </b-sidebar>
   </div>
 </template>

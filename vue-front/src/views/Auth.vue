@@ -167,7 +167,7 @@ export default class Auth extends Mapper {
     //this.$router.push('/registration')
     this.$bvModal.show('registrationModal')
   }
-  private async loginClick() {
+  async loginClick() {
     const objReq: any = {
       username: this.authData.login,
       password: this.authData.password
