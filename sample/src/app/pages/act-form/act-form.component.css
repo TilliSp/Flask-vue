@@ -1,0 +1,7 @@
+
+a:focus{ 
+  background-color: #0d6efd;
+transition: 600ms;}
+a:hover{ 
+  background-color: #0d6dfd56;
+transition: 600ms;}

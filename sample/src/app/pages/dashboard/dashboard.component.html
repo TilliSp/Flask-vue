@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col">
+
+        <div class="h-100">
+
+            <div class="row">
+                <div *ngFor="let stat of statData" class="col-xl-3 col-md-6">
+                    <app-stat [title]="stat.title" [value]="stat.value" [icon]="stat.icon" [persantage]="stat.persantage" [profit]="stat.profit"></app-stat>
+                </div>
+            </div> <!-- end row-->
+
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex flex-row justify-content-between">
+                                <h4 class="card-title mb-0">Examination Statistics</h4>
+                                <div class="form-check form-switch form-switch-right form-switch-md">
+                                    <label for="form-grid-showcode" class="form-label text-muted">Show as Percentages</label>
+                                    <input class="form-check-input code-switcher" type="checkbox" [(ngModel)]="examinationStatisticsToggle" id="form-grid-showcode" (click)="ShowAsPercentage()">
+                                </div>
+                            </div>
+                        </div><!-- end card header -->
+              
+                        <div class="card-body">
+                          <apx-chart [series]="examinationStatics.series" [chart]="examinationStatics.chart"
+                          [dataLabels]="examinationStatics.dataLabels" [plotOptions]="examinationStatics.plotOptions"
+                          [responsive]="examinationStatics.responsive" [xaxis]="examinationStatics.xaxis"
+                          [legend]="examinationStatics.legend" [fill]="examinationStatics.fill" [colors]="examinationStatics.colors"></apx-chart>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Students</h4>
+                        </div><!-- end card header -->
+                        <div class="card-body">
+                            <apx-chart [series]="studentChart.series" [chart]="studentChart.chart"
+                            [yaxis]="studentChart.yaxis" [xaxis]="studentChart.xaxis"
+                            [labels]="studentChart.labels" [stroke]="studentChart.stroke"
+                            [plotOptions]="studentChart.plotOptions" [markers]="studentChart.markers"
+                            [fill]="studentChart.fill" [tooltip]="studentChart.tooltip"
+                            [colors]="studentChart.colors"></apx-chart>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+
+                </div>
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Examination Summary</h4>
+                        </div><!-- end card header -->
+                        <div class="card-body">
+                            <apx-chart [series]="examinationSummary.series" [chart]="examinationSummary.chart"
+                            [dataLabels]="examinationSummary.dataLabels" [stroke]="examinationSummary.stroke"
+                            [colors]="examinationSummary.colors" [title]="examinationSummary.title"
+                            [subtitle]="examinationSummary.subtitle" [plotOptions]="examinationSummary.plotOptions"
+                            [yaxis]="examinationSummary.yaxis" [xaxis]="examinationSummary.xaxis"
+                            [tooltip]="examinationSummary.tooltip"></apx-chart>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Today Events</h4>
+                        </div><!-- end card header -->
+              
+                        <div class="card-body">
+                            No Events
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title mb-0">Exam Topper</h4>
+                        </div><!-- end card header -->
+              
+                        <div class="card-body p-3">
+                            <div class="d-flex flex-row" *ngFor="let toppers of examToppers">
+                                <img src="{{ toppers.imgUrl }}" class="img-fluid" style="max-width: 105px;">
+                                <div class="d-flex flex-column">
+                                    <span>{{ toppers.name}}</span>
+                                    <span>{{ toppers.marks}}{{"/"}}{{toppers.marksHigh}}</span>
+                                </div>
+                            </div>
+                        </div><!-- end card-body -->
+                    </div><!-- end card -->
+                </div>
+            </div>
+        </div> <!-- end .h-100-->
+
+    </div> <!-- end col -->
+</div>

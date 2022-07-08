@@ -1,0 +1,107 @@
+<div class="d-flex flex-nowrap mains" >
+  <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+    <div href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <svg class="bi pe-none me-2" width="40" height="32"></svg>
+      <span class="fs-4">Пользователь</span>
+    </div>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a routerLink="/register" class="nav-link text-white" aria-current="page">
+          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+          Главная
+        </a>
+      </li>
+      <li>
+        <a routerLink="/video" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+          Видеопанель
+        </a>
+      </li>
+      <li>
+        <a routerLink="/home" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+          Профиль
+        </a>
+      </li>
+      <li>
+        <a routerLink="/actform" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+          Формирование актов
+        </a>
+      </li>
+    </ul>
+    <!-- <hr>
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+        <strong>mdo</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+        <li><a class="dropdown-item" href="#">New project...</a></li>
+        <li><a class="dropdown-item" href="#">Settings</a></li>
+        <li><a class="dropdown-item" href="#">Profile</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#">Sign out</a></li>
+      </ul>
+    </div> -->
+  </div>
+</div>
+
+
+<!-- 
+<div id="scrollbar">
+  <div class="container-fluid">
+      <ngx-simplebar class="sidebar-menu-scroll" style="max-height: 80vh">
+        <ul class="metismenu list-unstyled navbar-nav" id="navbar-nav">
+
+          <ng-container *ngFor="let item of menuItems">
+            <li class="menu-title" *ngIf="item.isTitle"><span data-key="t-menu">{{ item.label | translate }}</span></li>
+
+            <li class="nav-item" *ngIf="!item.isTitle && !item.isLayout">
+              <a *ngIf="hasItems(item)" href="javascript:void(0);" class="is-parent nav-link menu-link"
+                [ngClass]="{'has-arrow': !item.badge, 'has-dropdown': item.badge}" data-bs-toggle="collapse" aria-expanded="false" (click)="toggleItem($event)">
+                <i class="{{ item.icon }} icon nav-icon" class=""></i>
+                <span class=""> {{ item.label | translate }}</span>
+                <span class="badge badge-pill {{item.badge.variant}}" *ngIf="item.badge">{{item.badge.text
+                  | translate}}</span>
+              </a>
+
+              <a [routerLink]="item.link" *ngIf="!hasItems(item)" class="side-nav-link-ref nav-link menu-link" routerLinkActive="active">
+                <i class="bx {{ item.icon }} icon nav-icon" *ngIf="item.icon" class=""></i>
+                <span class=""> {{ item.label | translate }}</span>
+                <span class="badge {{item.badge.variant}} float-end" *ngIf="item.badge">{{item.badge.text |
+                  translate}}</span>
+              </a>
+              
+              <div class="collapse menu-dropdown" *ngIf="hasItems(item)">
+                <ul *ngIf="hasItems(item)" class="nav nav-sm flex-column" aria-expanded="false">
+                  <li *ngFor="let subitem of item.subItems" class="nav-item">
+                    <a [routerLink]="subitem.link" *ngIf="!hasItems(subitem)" class="nav-link"
+                      [attr.data-parent]="subitem.parentId" routerLinkActive="active" (click)="updateActive($event)">
+                      {{ subitem.label | translate}}
+                    </a>
+                    <a *ngIf="hasItems(subitem)" class="nav-link" href="javascript:void(0);"
+                      [attr.data-parent]="subitem.parentId" data-bs-toggle="collapse" aria-expanded="false" (click)="toggleSubItem($event)">
+                      {{ subitem.label | translate}}
+                    </a>
+                    <div class="collapse menu-dropdown" *ngIf="hasItems(subitem)">
+                      <ul *ngIf="hasItems(subitem)" class="nav nav-sm flex-column" aria-expanded="false">
+                        <li *ngFor="let subSubitem of subitem.subItems" class="nav-item">
+                          <a [attr.data-parent]="subSubitem.parentId" [routerLink]="subSubitem.link" routerLinkActive="active"
+                          class="nav-link" (click)="updateActive($event)">
+                            {{ subSubitem.label | translate }}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </ngx-simplebar>
+  </div> -->
+  <!-- Sidebar -->
+<!-- </div> -->
