@@ -1,17 +1,17 @@
-import sqlite3
-import os
-import re
+# import sqlite3
+# import os
+# import re
+# from flask_jwt_extended import create_access_token
+# from sqlalchemy.dialects.sqlite import json
+# import datetime
 from os import walk
 import platform
 from flask import Flask, render_template, request, g,jsonify, flash, abort, redirect, url_for, make_response
-from sqlalchemy.dialects.sqlite import json
 from random import choice
 from string import ascii_uppercase
 from FDataBase import FDataBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager
-from flask_jwt_extended import create_access_token
-import datetime
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from UserLogin import userLogin
 from admin.admin import admin
@@ -192,9 +192,9 @@ def login():
         user = dbase.getUserByUsername(user_data['username'])
         if user and check_password_hash(user['psw'], user_data['password']):
             flash("Неверная пара логин/пароль", "error")
-            access_token = generate_token()
-            dbase.saveToken(access_token,user['id'])
-            return {"access_token": access_token, "id": str(user['id']), "role": (user['role']), "username": (
+            token = generate_token()
+            dbase.saveToken(token,user['id'])
+            return {"token": token, "id": str(user['id']), "role": (user['role']), "username": (
                 user['username'])}, 200
         return {"error": 'Login or password invalid'}, 401
     return {"error": 'cannot found required fields'}, 403
@@ -208,7 +208,11 @@ def register():
         res = dbase.addUser(user_data['username'], hash)
         if res:
             flash("Вы успешно зарегистрированы", "success")
-            return {"ok": True}, 200
+            user = dbase.getUserByUsername(user_data['username'])
+            token = generate_token()
+            dbase.saveToken(token, user['id'])
+            return {"token": token, "id": str(user['id']), "role": (user['role']), "username": (
+                user['username'])}, 200
         else:
             flash("Ошибка при добавлении в БД", "error")
 

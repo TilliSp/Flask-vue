@@ -17,9 +17,9 @@ class FDataBase:
         except Exception as e:
             print("DB init fail %s " % str(e))
 
-    def fetchone(self,sql,vars):
+    def fetchone(self, sql, vars):
         try:
-            self.__cur.execute(sql,vars)
+            self.__cur.execute(sql, vars)
             res = self.__cur.fetchone()
 
             if res:
