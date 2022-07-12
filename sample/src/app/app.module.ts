@@ -10,18 +10,25 @@ import {
   LayoutComponent,
   LoginComponent,
   RegisterComponent,
+  LoginLayoutComponent,
+  AlertComponent
 } from './pages';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { UserState } from '@/_models/';
+import { RouterModule } from '@angular/router';
+import { AuthGuard } from './_helpers';
+import { AuthenticationService } from './_services';
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
     LoginComponent,
+    LoginLayoutComponent,
     LayoutComponent,
     SidebarComponent,
+    AlertComponent
   ],
   imports: [
     HttpClientModule,
@@ -33,7 +40,7 @@ import { UserState } from '@/_models/';
     ThemeModule.forRoot(),
     FormsModule,
   ],
-  providers: [UserState],
+  providers: [UserState, AuthenticationService, AuthGuard ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

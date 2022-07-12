@@ -6,3 +6,4 @@ export * from './act-form/act-form.component';
 export * from './video-panel/video-panel.component';
 export * from './layout.component';
 export * from './login-layout.component';
+export * from './alert-component';

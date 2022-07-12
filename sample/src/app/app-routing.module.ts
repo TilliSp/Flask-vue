@@ -1,20 +1,47 @@
 import { AppComponent } from './app.component';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { LoginComponent,ProfileComponent,RegisterComponent, LoginLayoutComponent,SidebarComponent, videoPanel, actFormComponent} from './pages';
+import {
+  LoginComponent,
+  ProfileComponent,
+  RegisterComponent,
+  LayoutComponent,
+  LoginLayoutComponent,
+  SidebarComponent,
+  videoPanel,
+  actFormComponent,
+} from './pages';
 import { AuthGuard } from '@/_helpers';
 
-
 export const routes: Routes = [
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+       { path: 'home', component: ProfileComponent },
+       { path: '', redirectTo: 'home', pathMatch: 'full' },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'video', component: videoPanel,canActivate: [AuthGuard] },
+      { path: 'actform', component: actFormComponent,canActivate: [AuthGuard] },
+    ],
+  },
   
-  { path: 'home', component: ProfileComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'video', component: videoPanel },
-  { path: 'actform', component: actFormComponent },
-  { path: 's', component: SidebarComponent },
-  { path: 'app', component: AppComponent },
-  { path: '', redirectTo: 'home', pathMatch: 'full'}
+  {
+    path: '',
+    component: LoginLayoutComponent,
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+    ],
+  },
+  { path: '**', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
 
 const config: ExtraOptions = {};

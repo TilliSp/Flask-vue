@@ -1,55 +1,69 @@
-import { http } from '@/_api/httpAxios'
+import { http } from '@/_api/httpAxios';
 /*import createURLParams from '@/api/datasource/createURLParams.ts'*/
 
 export interface UserRegister {
-  username: string
-  name: string
-  surname?: string
-  password: string
-  type: string
-  customer?: string
+  username: string;
+  name: string;
+  surname?: string;
+  password: string;
+  type: string;
+  customer?: string;
 }
 
 export interface UserLogin {
-  username: string
-  password: string
+  username: string;
+  password: string;
 }
 export interface UserRequest {
-  token: string
+  token: string;
 }
 export interface PasswordChangeI {
-  passwordOld: string
-  password: string
-  passwordConfirm: string
+  passwordOld: string;
+  password: string;
+  passwordConfirm: string;
 }
 
 export default class UserAPI {
-  public static async requestPost(method: string, json: any) {
-    const token = localStorage.getItem('user-token')
-    let headers = {}
+  public static requestPost(method: string, json: any) {
+    const token = localStorage.getItem('user-token');
+    let headers = {};
     if (token !== null && token.length === 32) {
-      headers = { Authorization: 'Bearer ' + token }
+      headers = { Authorization: 'Bearer ' + token };
     }
-    return await http.post(`/${method}`, json, { headers }).then(response => {
-      if (200 <= response.status && response.status < 300) {
-        return response.data
-      }
-      return Promise.reject(response.status)
-    })
+    return http
+      .post(`/${method}`, json, { headers, timeout: 5000 })
+      .then((response) => {
+        if (200 <= response.status && response.status < 300) {
+          return response.data;
+        }
+        console.log('REQUEST POST +');
+        return Promise.reject(response.status);
+      })
+      .catch((err) => {        
+        console.log('REQUEST POST -');
+        this.requestPost;
+        return err;
+      });
   }
   public static register(json: UserRegister) {
-    return this.requestPost('register', json)
+    return this.requestPost('register', json);
   }
   public static login(json: UserLogin) {
-    return this.requestPost('login', json)
+    return this.requestPost('login', json);
   }
-  static async checkToken() {
-    return await this.requestPost(`validation`, { validation: true })
+  static checkToken() {
+    return this.requestPost(`validation`, { validation: true })
+      .then((user) => {
+        return 'userInfo' in user;
+      })
+      .catch(() => {
+        return false;
+      });
   }
   public static passChange(json: PasswordChangeI) {
-    return this.requestPost('passChange', json)
+    return this.requestPost('passChange', json);
   }
   public static profile() {
-    return this.requestPost(`profile`, {})
+    return this.requestPost(`profile`, {});
   }
 }

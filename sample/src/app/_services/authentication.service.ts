@@ -1,71 +1,78 @@
 ﻿import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, switchMap, take, first, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import {AlertService } from './alert.service';
-import { UserState } from '@/_models/';
+import { BehaviorSubject } from 'rxjs';
+import { AlertService } from './alert.service';
 import UserAPI, { UserLogin, UserRegister } from '@/_api/user';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private loggedIn = new BehaviorSubject<boolean>(false);
 
-  getLoggedIn(){
+  getLoggedIn() {
     return this.loggedIn.value;
   }
   get isLoggedIn() {
     return this.loggedIn.asObservable();
   }
-  set logged(status: boolean){
+  set logged(status: boolean) {
     this.loggedIn.next(status);
   }
-
-  constructor(
-    private router: Router,
-    private alertService: AlertService
-  ) {}
-
-  async login(loginObj: UserLogin) {
-    let response;
-    try {
-      if (!this.getLoggedIn()) {
-        console.log(this.getLoggedIn())
-        response = await UserAPI.login(loginObj);
-        console.log(response)
-        if (
-          Object.keys(response.token).length !== 0 &&
-          Object.keys(response.id).length !== 0
-        ) {          
-          // UserState.setUserInfo(response);
-          this.loggedIn.next(true);
-          console.log('bef token set!')
-          localStorage.setItem('user-token', response.token);
-          console.log('after token set!')
-          this.router.navigate(['/']);
-          console.log('bbbbbbbb!')
-        }
-      }else{
-        // ALERT!
-      }
-    } catch (err) {
-      // ALERT!
-      this.alertService.error;
-      this.logout();
-    }
+  checkToken(): Promise<boolean> {
+    return UserAPI.checkToken().then((bool) => {
+      this.loggedIn.next(bool);
+      return bool;
+    });
   }
-  async fetchRegisterUser(registerObj: UserRegister) {
-    try {
-      const response = await UserAPI.register(registerObj);
-      if (response.ok) {
-        localStorage.setItem('user-token', response.token);
-        this.loggedIn.next(true);
-      }
-    } catch (err) {
-        // alert
-        // this.loggedIn.next(false);
-        console.error(err);
-    }
+
+  constructor(private router: Router, private alertService: AlertService) {}
+
+  login(loginObj: UserLogin) {
+    return UserAPI.login(loginObj)
+      .then((response) => {
+        if (!this.getLoggedIn()) {
+          if (
+            Object.keys(response.token).length !== 0 &&
+            Object.keys(response.id).length !== 0
+          ) {
+            // UserState.setUserInfo(response);
+            this.loggedIn.next(true);
+            // console.log('bef token set!')
+            localStorage.setItem('user-token', response.token);
+            // console.log('after token set!')
+            this.router.navigate(['/']);
+            // console.log('bbbbbbbb!')
+          }
+        } else {
+          // ALERT!
+          console.log('rrrrrrrrrrrr');
+        }
+      })
+      .catch((err) => {
+        // ALERT!
+        console.log('ssssssssssssss');
+        // this.alertService.error;
+        // this.logout();
+      });
+  }
+  fetchRegisterUser(registerObj: UserRegister) {
+    return UserAPI.register(registerObj)
+      .then((response) => {
+        if (response.ok) {
+          // localStorage.setItem('username', response.username);
+          localStorage.setItem('user-token', response.token);
+          this.loggedIn.next(true);
+          return true;
+        } else {
+          console.log('reg');
+          this.alertService.error(`REG ERROR: ${JSON.stringify(response)}`);
+          return false;
+        }
+      })
+      .catch((err) => {
+        console.log('catch');
+        this.alertService.error(`CATCH ERROR: ${JSON.stringify(err)}`);
+        return false;
+      });
   }
 
   logout() {
