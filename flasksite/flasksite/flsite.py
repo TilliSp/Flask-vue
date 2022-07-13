@@ -93,13 +93,13 @@ def before_request(isAuth=False):
                     print('token validation ',request_token)
                     if len(request_token) == 32:
                         response = dbase.validationToken(request_token)
-                        print('token validation ', response)
+                        print('token validation ?', response)
                         if response and response['id']:
                             g.user['isAuth'] = True
                             g.user['id'] = response['id']
                             return
                         else:
-                            return {'User is not Auth'}, 403
+                            return {"error": 'User is not Auth'}, 403
             else:
                 print('YAY')
         else:
@@ -196,22 +196,29 @@ def login():
             dbase.saveToken(token,user['id'])
             return {"token": token, "id": str(user['id']), "role": (user['role']), "username": (
                 user['username'])}, 200
+            print('log inv')
         return {"error": 'Login or password invalid'}, 401
+        print('log inv')
     return {"error": 'cannot found required fields'}, 403
 
 
 @app.route("/register", methods=["POST"])
 def register():
     if 'username' in request.json and 'password' in request.json:
+        print(1)
         user_data = request.json
         hash = generate_password_hash(user_data['password'])
+        print('before addUser')
         res = dbase.addUser(user_data['username'], hash)
+        print('2')
         if res:
             flash("Вы успешно зарегистрированы", "success")
             user = dbase.getUserByUsername(user_data['username'])
+            print(3)
             token = generate_token()
             dbase.saveToken(token, user['id'])
-            return {"token": token, "id": str(user['id']), "role": (user['role']), "username": (
+            print('4')
+            return {"ok": True, "token": token, "id": str(user['id']), "role": (user['role']), "username": (
                 user['username'])}, 200
         else:
             flash("Ошибка при добавлении в БД", "error")
