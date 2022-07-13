@@ -1,4 +1,6 @@
 import { http } from '@/_api/httpAxios';
+import { resolve } from 'path';
+import {pipe,delay,retry} from 'rxjs'
 /*import createURLParams from '@/api/datasource/createURLParams.ts'*/
 
 export interface UserRegister {
@@ -24,6 +26,16 @@ export interface PasswordChangeI {
 }
 
 export default class UserAPI {
+  // catchError => errorMessage pool -> subscribe to alert 
+  /*
+   catchError(err => {  
+            console.log(err); 
+            this.errorMessage = err.message;
+            return [];
+        }))*/
+  public static sleep(ms: number | undefined) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   public static requestPost(method: string, json: any) {
     const token = localStorage.getItem('user-token');
     let headers = {};
@@ -37,11 +49,21 @@ export default class UserAPI {
           return response.data;
         }
         console.log('REQUEST POST +');
-        return Promise.reject(response.status);
+        return Promise.reject(response.status);// {code:response.status}
       })
-      .catch((err) => {        
+      .catch((err):any => {
         console.log('REQUEST POST -');
-        this.requestPost;
+        switch (err.code) {
+          case 'ERR_NETWORK':
+            // + 503
+            console.log('1');
+            this.sleep(5000);
+            console.log('2');
+           // return this.requestPost(method, json);
+           break;
+        }
+        console.log(err.code);
+
         return err;
       });
   }
@@ -67,3 +89,7 @@ export default class UserAPI {
     return this.requestPost(`profile`, {});
   }
 }
+// function sleep(ms: number | undefined) {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// }
+

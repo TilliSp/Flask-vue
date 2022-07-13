@@ -3,11 +3,13 @@ import { BehaviorSubject } from 'rxjs';
 import { AlertService } from './alert.service';
 import UserAPI, { UserLogin, UserRegister } from '@/_api/user';
 import { Router } from '@angular/router';
+import { count } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+  
   private loggedIn = new BehaviorSubject<boolean>(false);
-
+  private counter = false;
   getLoggedIn() {
     return this.loggedIn.value;
   }
@@ -80,4 +82,17 @@ export class AuthenticationService {
     this.loggedIn.next(false);
     this.router.navigate(['/login']);
   }
+
+  validator() {
+    if (!this.counter) {
+      this.counter = true;
+      if (!this.checkToken()) {
+        this.loggedIn.next(false);
+        this.router.navigate(['/login']);
+      }
+
+      this.counter = false;
+    }
+  }
 }
+

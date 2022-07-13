@@ -1,3 +1,4 @@
+import { validate } from 'json-schema';
 import { AppComponent } from './app.component';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -12,6 +13,8 @@ import {
   actFormComponent,
 } from './pages';
 import { AuthGuard } from '@/_helpers';
+import UserAPI from './_api/user';
+import { AuthenticationService } from './_services';
 
 export const routes: Routes = [
   {
@@ -50,4 +53,12 @@ const config: ExtraOptions = {};
   imports: [RouterModule.forRoot(routes, config)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  constructor(authService: AuthenticationService) {
+    setInterval((()=>{
+      // check loggedin ? if false -> clear set interval
+      authService.validator()
+      // console.log("___@;;") 
+    }),10000)
+  }
+}
