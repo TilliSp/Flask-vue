@@ -94,12 +94,15 @@ def before_request(isAuth=False):
                     if len(request_token) == 32:
                         response = dbase.validationToken(request_token)
                         print('token validation ?', response)
-                        if response and response['id']:
-                            g.user['isAuth'] = True
-                            g.user['id'] = response['id']
-                            return
+                        if response:
+                                if response['id']:
+                                    g.user['isAuth'] = True
+                                    g.user['id'] = response['id']
+                                    return
+                                else:
+                                    return {"error": 'User is not Auth'}, 403
                         else:
-                            return {"error": 'User is not Auth'}, 403
+                            return {"error": 'Server is down'}, 503
             else:
                 print('YAY')
         else:
@@ -244,7 +247,7 @@ def passwordChange():
         #     return  'OK', 200, print('test pass OK', user['psw'], user_data['passwordOld'], check_password_hash(user['psw'], user_data['passwordOld']))
         return 'NOT OK', 401, print('test pass NOT OK', user['psw'], user_data['passwordOld'],
                                     check_password_hash(user['psw'], user_data['passwordOld']))
-    return {"error": 'cannot found required fields'}, 401, print('test thth')
+    return {"error": 'cannot found required fields'}, 401, print('cannot found required fields ')
 
 
 @app.route('/logout')
@@ -260,11 +263,16 @@ def validation():
     print("profile before ok")
     print("isAuth.user:", g.user['isAuth'], "id.user:", g.user['id'])
     if g.user['isAuth'] and g.user['id']:
-        print("OK?")
+        print("dbase.getUser")
         userInfo = dbase.getUser(g.user['id'])
+        print('before.........userInfo: ' + str(userInfo))
         if userInfo:
-            return {"userInfo": {"role": (userInfo['role']), "username": (userInfo['username']),
-                                 "created": str(userInfo['created'])}},200
+            if 'role' in userInfo:
+                return {"userInfo": {"role": (userInfo['role']), "username": (userInfo['username']),
+                                     "created": str(userInfo['created'])}},200
+        else:
+            return {"error": 'ty down'}, 503
+        print('after______________userInfo: ' + str(userInfo))
     return {"error": 'cannot found required fields'}, 401, print('test thth')
 
 

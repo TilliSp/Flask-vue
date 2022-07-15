@@ -10,12 +10,15 @@ import MySQLdb as db
 class FDataBase:
     def __init__(self, app):
         try:
-            self.__db = db.connect(host=app.config['MYSQL_HOST'],port=3306,user=app.config['MYSQL_USER'],passwd=app.config['MYSQL_PASSWORD'], autocommit=True)
+            self.__db = db.connect(host=app.config['MYSQL_HOST'], port=3306, user=app.config['MYSQL_USER'], passwd=app.config['MYSQL_PASSWORD'])
             self.__db.autocommit(True)
             self.__db.select_db(app.config['MYSQL_DB'])
+            self.cnt_err = 0
         except Exception as e:
             print("DB init fail %s " % str(e))
 
+    def reset_cnt_err(self):
+        self.cnt_err = 0
     def fetchone(self, sql, vars):
         print(sql)
         try:
@@ -25,11 +28,21 @@ class FDataBase:
             if res:
                 field_name = [field[0] for field in _cur.description]
                 _cur.close()
-                return dict(zip(field_name, res))
+                payload = dict(zip(field_name, res))
+                self.reset_cnt_err()
+                return payload
         except (db.Error, db.Warning) as e:
-            print("Ошибка получения данных из БД " + str(e))
+            return (False, self.fetchone(sql, vars))[self.check_err(e)]
+        return dict([])
 
+    def check_err(self, exception):
+        print("Ошибка получения данных из БД " + str(exception) + ' ' + str(self.cnt_err))
+        if self.cnt_err <= 4:
+            self.cnt_err += 1
+
+            return True
         return False
+
     def check(self, var):
         res = self.re.sub(r'[^0-9a-zA-Z]', r'', var)
         return res
