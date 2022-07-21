@@ -7,3 +7,4 @@ export * from './video-panel/video-panel.component';
 export * from './layout.component';
 export * from './login-layout.component';
 export * from './alert-component';
+export * from './button/button.component';

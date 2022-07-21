@@ -1,44 +1,46 @@
 <h2>Формирование актов</h2>
-    <div>
-        <div class="card">
-            <div class="container">
-                <div class="row justify-content-start">
-                    <div class="col-2 col-sm-12 col-lg-2">
-                        <div class="card-header ">
-                            <span class="me-3">Папки</span>
-                            <!-- <v-spacer></v-spacer>
-                            <v-icon size="32">{{ icons.mdiFolder }}</v-icon> -->
-                        </div>
 
-                        <div class="card-body">
-                            <div class="list-group" id="list-tab" role="tablist">
-                                <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" role="tab" aria-controls="list-home">Home</a>
-                                <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list" role="tab" aria-controls="list-profile">Profile</a>
-                                <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list" role="tab" aria-controls="list-messages">Messages</a>
-                                <a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" role="tab" aria-controls="list-settings">Settings</a>
-                              </div>
-                        </div>
+<div class="card">
+    <div class="container">
+        <div class="row justify-content-start">
+            <div class="col-2 col-sm-12 col-lg-2">
+                <div class="card-header ">
+                    <span class="me-3">Папки</span>
+                    <!-- <v-spacer></v-spacer>
+                            <v-icon size="32">{{ icons.mdiFolder }}</v-icon> -->
+                </div>
+
+                <div class="card-body">
+                    <div class="list-group" id="list-tab" role="tablist">
+                        <a class="list-group-item list-group-item-action active" id="list-home-list"
+                            data-bs-toggle="list" role="tab" aria-controls="list-home">Home</a>
+                        <a class="list-group-item list-group-item-action" id="list-profile-list" data-bs-toggle="list"
+                            role="tab" aria-controls="list-profile">Profile</a>
+                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list"
+                            role="tab" aria-controls="list-messages">Messages</a>
+                        <a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list"
+                            role="tab" aria-controls="list-settings">Settings</a>
                     </div>
-                    <div class="col-9">
-                        <div class="card-header ">
-                            <span class="me-3">Папки</span>
-                            <!-- <v-spacer></v-spacer>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="card-header ">
+                    <span class="me-3">Папки</span>
+                    <!-- <v-spacer></v-spacer>
                             <v-icon size="32">{{ icons.mdiFolder }}</v-icon> -->
-                        </div>
+                </div>
 
-                        <div>
-                            <div class="row row-cols-1 row-cols-md-4 g-4">
-                                <div class="col" v-for="data in images" :key="data.img">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title"></h5>
-                                            <p class="card-text">
-                                                <button  type="button" class="btn btn-outline-primary">
-                                                    Составить акт
-                                                </button>
-                                            </p>
-                                        </div>
-                                    </div>
+                <div>
+                    <div class="row row-cols-1 row-cols-md-4 g-4">
+                        <div class="col" v-for="data in images" :key="data.img">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title"></h5>
+                                    <p class="card-text">
+                                        <button type="button" class="btn btn-outline-primary">
+                                            Составить акт
+                                        </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -47,3 +49,4 @@
             </div>
         </div>
     </div>
+</div>

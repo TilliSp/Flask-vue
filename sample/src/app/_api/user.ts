@@ -1,6 +1,6 @@
 import { http } from '@/_api/httpAxios';
 import { resolve } from 'path';
-import {pipe,delay,retry} from 'rxjs'
+import {pipe,delay,retry, sample} from 'rxjs'
 /*import createURLParams from '@/api/datasource/createURLParams.ts'*/
 
 export interface UserRegister {
@@ -57,7 +57,7 @@ export default class UserAPI {
           case 'ERR_NETWORK':
             // + 503
             console.log('1');
-            this.sleep(5000);
+            this.sleep(500000);
             console.log('2');
            // return this.requestPost(method, json);
            break;

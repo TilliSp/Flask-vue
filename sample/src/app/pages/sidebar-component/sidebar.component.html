@@ -1,32 +1,29 @@
-<div class="d-flex flex-nowrap mains" >
-  <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+<div #sidebar id="sidebar" class="d-flex flex-nowrap mains" >
+  <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width:100%">
+    
     <div href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-      <svg class="bi pe-none me-2" width="40" height="32"></svg>
       <span class="fs-4">Пользователь</span>
+      <div  href="javascript:void(0)" class="closebtn btn" (click)="switchSideBar(true)">&times;</div>
     </div>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a routerLink="/register" class="nav-link text-white" aria-current="page">
-          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+        <a routerLink="/register" class="nav-link text-white" aria-current="page">          
           Главная
         </a>
       </li>
-      <li>
-        <a routerLink="/video" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+      <li class="nav-item">
+        <a routerLink="/video" class="nav-link text-white">          
           Видеопанель
         </a>
       </li>
-      <li>
-        <a routerLink="/home" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+      <li class="nav-item">
+        <a routerLink="/home" class="nav-link text-white">          
           Профиль
         </a>
       </li>
-      <li>
-        <a routerLink="/actform" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"></svg>
+      <li class="nav-item">
+        <a routerLink="/actform" class="nav-link text-white">          
           Формирование актов
         </a>
       </li>
@@ -105,3 +102,14 @@
   </div> -->
   <!-- Sidebar -->
 <!-- </div> -->
+<!-- <script>
+  function openNav() {
+    document.getElementById("sidebar").style.width = "250px";
+    document.getElementById("main").style.marginLeft = "250px";
+  }
+  
+  function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+  }
+  </script> -->

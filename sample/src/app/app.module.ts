@@ -11,7 +11,8 @@ import {
   LoginComponent,
   RegisterComponent,
   LoginLayoutComponent,
-  AlertComponent
+  AlertComponent,
+  ButtonComponent
 } from './pages';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -28,7 +29,8 @@ import { AuthenticationService } from './_services';
     LoginLayoutComponent,
     LayoutComponent,
     SidebarComponent,
-    AlertComponent
+    AlertComponent,
+    ButtonComponent
   ],
   imports: [
     HttpClientModule,

@@ -30,8 +30,12 @@ export const routes: Routes = [
     component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'video', component: videoPanel,canActivate: [AuthGuard] },
-      { path: 'actform', component: actFormComponent,canActivate: [AuthGuard] },
+      { path: 'video', component: videoPanel
+      // ,canActivate: [AuthGuard] 
+    },
+      { path: 'actform', component: actFormComponent,
+      // canActivate: [AuthGuard] 
+    },
     ],
   },
   

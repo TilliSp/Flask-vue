@@ -1,12 +1,14 @@
 <div class="page-container">
     <div class="content-wrap">
-        <div class="row color" >
-            <div class="col-2">
-                <app-sidebar></app-sidebar>
-            </div> 
-            <div class="col-9">
+        <div id="row-class" class="row color">
+            <!-- <button class="openbtn" (click)="switchSideBar(false)">☰</button> -->
+            <div id="app-sidebar" class="col-2" >
+                <app-sidebar ></app-sidebar>
+            </div>
+            <div id="content" class="col-9 content">
+                <app-btn (sideBarButtonClicked)="switchSideBar($event)"></app-btn>
                 <router-outlet></router-outlet>
-            </div> 
+            </div>
         </div>
     </div>
 </div>
