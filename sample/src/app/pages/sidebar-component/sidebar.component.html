@@ -1,33 +1,37 @@
-<div #sidebar id="sidebar" class="d-flex flex-nowrap mains" >
-  <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width:100%">
-    
+<div #sidebar id="sidebar" class="collapse show d-flex flex-nowrap mains">
+  <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark w-100" >
+
     <div href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
       <span class="fs-4">Пользователь</span>
-      <div  href="javascript:void(0)" class="closebtn btn" (click)="switchSideBar(true)">&times;</div>
+      <div href="javascript:void(0)"  class="closebtn btn" (click)="switchSideBar(false)">&times;</div>
+      <!-- data-bs-toggle="collapse" data-bs-target="#sidebar" aria-expanded="false" aria-controls="sidebar"  -->       
     </div>
     <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-      <li class="nav-item">
-        <a routerLink="/register" class="nav-link text-white" aria-current="page">          
-          Главная
-        </a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="/video" class="nav-link text-white">          
-          Видеопанель
-        </a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="/home" class="nav-link text-white">          
-          Профиль
-        </a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="/actform" class="nav-link text-white">          
-          Формирование актов
-        </a>
-      </li>
-    </ul>
+    <div>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a routerLink="/register" class="nav-link text-white" aria-current="page">
+            Главная
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/video" class="nav-link text-white">
+            Видеопанель
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/home" class="nav-link text-white">
+            Профиль
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/actform" class="nav-link text-white">
+            Формирование актов
+          </a>
+        </li>
+      </ul>
+      
+    </div>
     <!-- <hr>
     <div class="dropdown">
       <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -100,7 +104,7 @@
         </ul>
       </ngx-simplebar>
   </div> -->
-  <!-- Sidebar -->
+<!-- Sidebar -->
 <!-- </div> -->
 <!-- <script>
   function openNav() {

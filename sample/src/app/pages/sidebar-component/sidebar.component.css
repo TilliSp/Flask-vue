@@ -84,5 +84,5 @@ transition: 600ms;}
   padding: 20px;
 }
 #sidebar{
-  transition: 2s;
+  /* transition: 2s; */
 }

@@ -1,26 +1,139 @@
-.color{
-    background-color: #e2e8f0;
-    // height: 100%;
-}
-.content{
 
-    // padding: 10px 15px;
-    position: relative;
-    // width: 100%;
-    // height: 100%;
+
+[data-sidebar-toggle="show"] {
+  // 
+  @media screen and (max-width: 767px) {
+
+    #app-sidebar {
+      margin-left: -100%;
+    }
+
+    #openbtn {
+      visibility: visible;
+      cursor: pointer !important;
+      background-color: aqua;
+      border: none !important;
+      opacity: 1 !important;
+      padding: 0px !important;
+    }
+
+    .sizeSidebar {
+      z-index: 1002;
+      position: relative!important;
+    }
+
+    .sizeContent {
+      z-index: 10;
+      position: absolute!important;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    #app-sidebar {
+      // transition: 3s;
+      flex: 0 0 auto;
+      width: 16%;
+    }
+    .sizeSidebar{
+      transition: 0.8s;
+    }
+
+    .sizeContent {
+      flex: 0 0 auto;
+      width: 84%;
+      z-index: 0;
+    }
+
+    .openbtn {
+      // display: none;
+      visibility: hidden;
+      // background-color: rebeccapurple !important;
+      // cursor: pointer;
+      // border: none;
+      // opacity: 1;
+      // padding: 0px !important;
+    }
+  }
+
+
 }
-.openbtn {
-    //display: none;
-    position: fixed;
-    top: 0px;
-    left: 266px;
-    width: 50px;
-    font-size: 20px;
-    cursor: pointer;
-    border: none;
-    opacity: 100000;
+
+
+[data-sidebar-toggle="hide"] {
+  @media screen and (min-width: 768px) {
+    #app-sidebar {
+      // transition: 3s;
+      flex: 0 0 auto;
+      width: 0%;
+      // display: none;
+      visibility: hidden;
+
+    }
+    .sizeSidebar{
+      transition: 0.8s;
+    }
+
+    .sizeContent {
+      flex: 0 0 85%;
+      // width: 85%;
+    }
+
+    .openbtn {
+      cursor: pointer;
+      border: none;
+      opacity: 1;
+      padding: 0px !important;
+      visibility: visible;
+      // display: none;
+    }
   }
-  
-  .openbtn:hover {
-    background-color: #444;
+
+  @media screen and (max-width:767px) {
+    .openbtn {
+      visibility: hidden;
+    }
+
+    #app-sidebar {
+      margin-left: 0 !important;
+      width: 50%;
+    }
+    .sizeContent{
+      position: absolute;
+    }
+
+    .sizeSidebar {
+      position: relative;
+      transition: 0.8s;
+      z-index: 1004;
+    }
   }
+}
+
+.color {
+  // background-color: #e2e8f0;
+  // height: 100%;
+}
+.openbtn{
+  // visibility: visible;
+  // background-color: red;
+  // cursor: pointer;
+  // border: none;
+  // margin: 0;
+}
+.openbtn:hover {
+  // background-color: #444;
+}
+.sizeSidebar{
+  transition: 0.8s;
+}
+.sizeContent {
+  z-index: 10;
+}
+.content {
+
+
+  // padding: 10px 15px;
+  // position: relative;
+  // width: 100%;
+  // height: 100%;
+}

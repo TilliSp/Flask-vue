@@ -1,14 +1,17 @@
-<div class="page-container">
+<div id=container class="page-container" data-sidebar-toggle="show">
     <div class="content-wrap">
         <div id="row-class" class="row color">
             <!-- <button class="openbtn" (click)="switchSideBar(false)">☰</button> -->
-            <div id="app-sidebar" class="col-2" >
-                <app-sidebar ></app-sidebar>
+            <!-- APP-SIDEBAR style="width: 15%;" -->
+            <div id="app-sidebar" class="sizeSidebar" >
+                <app-sidebar (sideBarButtonClicked)="switchSideBar()"></app-sidebar>
             </div>
-            <div id="content" class="col-9 content">
-                <app-btn (sideBarButtonClicked)="switchSideBar($event)"></app-btn>
+            <!-- CONTENT style="width: 85%;" -->
+            <div id="content" class="sizeContent content" >
+                <app-btn id="openbtn"  (sideBarButtonClicked)="switchSideBar()" ></app-btn>
+                <span lang=""></span>
                 <router-outlet></router-outlet>
             </div>
         </div>
     </div>
-</div>
+</div >

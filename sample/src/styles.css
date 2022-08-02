@@ -13,28 +13,31 @@ body {
     min-height: 100% !important;
   }
   .display {
-    display: none;
-    transition: 5s;
+    /* display: none;
+    transition: 5s; */
   }
   .openbtn {
     /* display: none; */
-    background-color: #e2e8f0;
+    /* background-color: #e2e8f0; */
+    /* background-color: rebeccapurple; */
     /* position: fixed; */
     /* top: 0px;
     left: 268px; */
     /* width: 50px; */
     /* font-size: 20px; */
-    cursor: pointer;
+    /* cursor: pointer;
     border: none;
     opacity: 0;
-    padding: 0px!important;
+    padding: 0px!important; */
   }
   
-  .openbtn:hover {
+  /* .openbtn:hover {
     background-color: #444;
     opacity: 1000000 !important;
 
-  }
+  } */
+
+  
   /* 
   !Стили для всего файла(с открытым/скрытым меню)
   Уведомления
@@ -43,3 +46,5 @@ body {
   Получать видеопоток
   Изменять данные пользователя
     */
+
+    

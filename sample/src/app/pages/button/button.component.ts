@@ -10,7 +10,9 @@ import { read } from 'fs';
 
 @Component({
   selector: 'app-btn',
-  templateUrl: './button.component.html'
+  templateUrl: './button.component.html',
+  styleUrls: ['../layout.component.scss'],
+
   // template: '<button class="openbtn" (click)="switchSideBar(false)">☰</button>',
 })
 export class ButtonComponent implements OnInit {
@@ -19,7 +21,6 @@ export class ButtonComponent implements OnInit {
   constructor() {}
   document: any;
   switchSideBar(event: any) {
-    // event.preventDefault();
     this.sideBarButtonClicked.emit();
   }
 
